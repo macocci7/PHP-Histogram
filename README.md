@@ -2,7 +2,8 @@
 
 PHP-Histogram is easy to use for creating histograms.
 
-<img src="img/HistogramExample08.png" width="300"　height="250" />　<img src="img/HistogramOhtaniShohei2023-05-15.png" width="300" height="250" /><br/>
+<img src="img/HistogramExample08.png" width="300"/>
+　<img src="img/HistogramOhtaniShohei2023-05-15.png" width="300"/><br/>
 
 ## Installation
 
