@@ -3,7 +3,8 @@
 PHP-Histogram is easy to use for creating histograms.
 
 <img src="img/HistogramExample08.png" width="300"/>
-　<img src="img/HistogramOhtaniShohei2023-05-15.png" width="300"/><br/>
+
+<img src="img/HistogramOhtaniShohei2023-05-15.png" width="300"/><br/>
 
 ## Installation
 
@@ -32,6 +33,18 @@ composer require macocci7/php-histogram
 - Result: `img/Histogram.png`
 
     <img src="img/Histogram.png">
+
+## Examples
+
+- [HistogramExample.php](examples/HistogramExample.php) >> results in:
+
+    ![Histogram.png](examples/img/Histogram.png)
+
+- [HistogramExampleCase.php](examples/HistogramExampleCase.php) >> results in [HistogramExampleCase.md](examples/HistogramExampleCase.md)
+
+- [OhtaniShoheiHistogram2023.php](examples/OhtaniShoheiHistogram2023.php) >> results in [OhtaniShoheiHistogram2023.md](examples/OhtaniShoheiHistogram2023.md)
+
+- [PopulationInJapanHistogram2022.php](examples/PopulationInJapanHistogram2022.php) >> results in [PopulationInJapanHistogram2022.md](examples/PopulationInJapanHistogram2022.md)
 
 ## Lisence
 
