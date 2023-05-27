@@ -1,0 +1,22 @@
+{
+    "name": "macocci7/php-histogram",
+    "description": "it's easy to use for creating histograms.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Macocci7\\PhpHistogram\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "macocci7",
+            "email": "macocci7@yahoo.co.jp"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "macocci7/php-frequency-table": ">= 1.0.5",
+        "intervention/image": "^2.7"
+    }
+}
