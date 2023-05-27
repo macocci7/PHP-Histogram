@@ -1,5 +1,6 @@
 {
     "name": "macocci7/php-histogram",
+    "version": "1.0.0",
     "description": "it's easy to use for creating histograms.",
     "type": "library",
     "license": "MIT",
