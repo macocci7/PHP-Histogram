@@ -29,17 +29,3 @@ Created by: [HistogramExample.php](HistogramExample.php)
 ![HistogramExample01.png](img/HistogramExample13.png)
 
 ![HistogramExample01.png](img/HistogramExample14.png)
-
-![HistogramExample01.png](img/HistogramExample15.png)
-
-![HistogramExample01.png](img/HistogramExample16.png)
-
-![HistogramExample01.png](img/HistogramExample17.png)
-
-![HistogramExample01.png](img/HistogramExample18.png)
-
-![HistogramExample01.png](img/HistogramExample19.png)
-
-![HistogramExample01.png](img/HistogramExample20.png)
-
-![HistogramExample01.png](img/HistogramExample21.png)

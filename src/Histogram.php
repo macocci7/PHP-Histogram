@@ -9,8 +9,8 @@ class Histogram
 
     public $ft;
     private $image;
-    private $canvasWidth = 400;
-    private $canvasHeight = 300;
+    private $canvasWidth;
+    private $canvasHeight;
     private $canvasBackgroundColor = '#ffffff';
     private $frameXRatio = 0.8;
     private $frameYRatio = 0.7;
@@ -28,178 +28,187 @@ class Histogram
     private $frequencyPolygonWidth = 2;
     private $cumulativeRelativeFrequencyPolygonColor = '#33ff66';
     private $cumulativeRelativeFrequencyPolygonWidth = 2;
-    private $classColor = '#333333';
     private $fontPath = 'fonts/ipaexg.ttf'; // IPA ex Gothic 00401
     //private $fontPath = 'fonts/ipaexm.ttf'; // IPA ex Mincho 00401
     private $fontSize = 16;
+    private $fontColor = '#333333';
     private $barMaxValue;
     private $barMinValue;
     private $baseX;
     private $baseY;
     private $parsed = [];
-    private $configValidation = [
-        'barHeigtPitch' => 'integer|min:1',
-        'canvasWidth' => 'integer|min:100|max:1920',
-        'canvasHeight' => 'integer|min:100|max:1080',
-        'canvasBackgroundColor' => 'colorcode',
-        'frameXRatio' => 'float|min:0.5|max:1.0',
-        'frameYRatio'=> 'float|min:0.5|max:1.0',
-        'axisColor' => 'colorcode',
-        'axisWidth' => 'integer|min:1',
-        'gridColor' => 'colorcode',
-        'gridWidth' => 'integer|min:1',
-        'gridHeightPitch' => 'integer|min:1',
-        'barBackgroundColor' => 'colorcode',
-        'barBorderColor' => 'colorcode',
-        'barBorderWidth' => 'integer:min:1',
-        'frequencyPolygonColor' => 'colorcode',
-        'frequencyPolygonWidth' => 'integer|min:1',
-        'cumulativeRelativeFrequencyPolygonColor' => 'colorcode',
-        'cumulativeRelativeFrequencyPolygonWidth' => 'integer|min:1',
-        'classColor' => 'colorcode',
-        'fontPath' => 'file',
-        'fontSize' => 'integer|min:6',
+    private $showBar = true;
+    private $showFrequencyPolygon = false;
+    private $showCumulativeRelativeFrequencyPolygon = false;
+    private $showFrequency = false;
+    private $labelX;
+    private $labelY;
+    private $caption;
+    private $validConfig = [
+        'canvasWidth',
+        'canvasHeight',
+        'canvasBackgroundColor',
+        'frameXRatio',
+        'frameYRatio',
+        'axisColor',
+        'axisWidth',
+        'gridColor',
+        'gridWidth',
+        'gridHeightPitch',
+        'barBackgroundColor',
+        'barBorderColor',
+        'barBorderWidth',
+        'frequencyPolygonColor',
+        'frequencyPolygonWidth',
+        'cumulativeRelativeFrequencyPolygonColor',
+        'cumulativeRelativeFrequencyPolygonWidth',
+        'fontPath',
+        'fontSize',
+        'fontColor',
     ];
-    private $configValidationWarning = [];
-    private $configValidationError = [];
 
-    public function __construct()
+    public function __construct($width = 400, $height = 300)
     {
         Image::configure(['driver' => 'imagick']);
         $this->ft = new FrequencyTable();
-    }
-
-    public function getValidConfig($config)
-    {
-        $this->configValidationWarning = [];
-        $this->configValidationError = [];
-        if (!is_array($config)) {
-            $this->configValidationError['isArray'] = '$config is not array.';
-            return [];
-        }
-        if (empty($config)) {
-            $this->configValidationWarning['count'] = '$config is empty.';
-            return [];
-        }
-        $acceptableKeys = array_keys($this->configValidation);
-        $validConfig = [];
-        foreach ($config as $key => $value) {
-            if (!in_array($key, $acceptableKeys)) continue;
-            if ($this->validateConfig($key, $value)) $validConfig[$key] = $value;
-        }
-        return $validConfig;
-    }
-
-    public function validateConfig($key, $value)
-    {
-        if (!strlen($this->configValidation[$key])) return false;
-        $conditions = explode('|',$this->configValidation[$key]);
-        foreach ($conditions as $condition) {
-            if (strcmp('file',$condition)===0) {
-                if (!file_exists($value)) {
-                    $this->setConfigValidationError($key, $condition, $value.' does not exist.');
-                    return false;
-                }
-                continue;
-            }
-            if (strcmp('integer',$condition)===0) {
-                if (!is_int($value)) {
-                    $this->setConfigValidationError($key, $condition, $value.' is not integer.');
-                    return false;
-                }
-                continue;
-            }
-            if (strcmp('float',$condition)===0) {
-                if (!is_float($value)) {
-                    $this->setConfigValidationError($key, $condition, $value.' is not float.');
-                    return false;
-                }
-                continue;
-            }
-            if (strcmp('string',$condition)===0) {
-                if (!is_string($value)) {
-                    $this->setConfigValidationError($key, $condition, $value.' is not string.');
-                    return false;
-                }
-                continue;
-            }
-            if (strcmp('colorcode',$condition)===0) {
-                if (!preg_match('/^#[A-Fa-f0-9]{3}$|^#[A-Fa-f0-9]{6}$/', $value)) {
-                    $this->setConfigValidationError($key, $condition, $value.' is not colorcode.');
-                    return false;
-                }
-                continue;
-            }
-            if (str_starts_with($condition, 'min:')) {
-                $min = substr($condition, 4);
-                if (!is_numeric($min)) {
-                    $this->setConfigValidationWarning($key, $condition, 'specified min condition ' . $min .' is not numeric.');
-                    continue;
-                }
-                if ($value < (float) $min) {
-                    $this->setConfigValidationError($key, $condition, $value . ' is less than ' . $min . '.');
-                    return false;
-                }
-                continue;
-            }
-            if (str_starts_with($condition, 'max:')) {
-                $max = substr($condition, 4);
-                if (!is_numeric($max)) {
-                    $this->setConfigValidationError($key, $condition, 'specified max condition ' . $max . ' is not numeric.');
-                    continue;
-                }
-                if ($value > (float) $max) {
-                    $this->setConfigValidationError($key, $condition, $value.' is greater than ' . $max . '.');
-                    return false;
-                }
-                continue;
-            }
-        }
-        return true;
-    }
-
-    public function setConfigValidationWarning($key, $rule, $message)
-    {
-        if (!array_key_exists($key, $this->configValidationWarning)) $this->configValidationWarning[$key] = [];
-        $this->configValidationWarning[$key][$rule] = $message;
-        return true;
-    }
-
-    public function setConfigValidationError($key, $rule, $message)
-    {
-        if (!array_key_exists($key, $this->configValidationError)) $this->configValidationError[$key] = [];
-        $this->configValidationError[$key][$rule] = $message;
-        return true;
-    }
-
-    public function getConfigValidationWarning()
-    {
-        return $this->configValidationWarning;
-    }
-
-    public function getConfigValidationError()
-    {
-        return $this->configValidationError;
-    }
-
-    public function configure($config)
-    {
-        foreach ($this->getValidConfig($config) as $key => $value) {
-            $this->{$key} = $value;
-        }
+        $this->resize($width, $height);
         return $this;
+    }
+
+    public function size()
+    {
+        if (null === $this->canvasWidth || null === $this->canvasHeight) return;
+        return [
+            'width' => $this->canvasWidth,
+            'height' => $this->canvasHeight,
+        ];
+    }
+
+    public function resize($width, $height)
+    {
+        if (!is_int($width) && !is_int($height)) return;
+        if ($width < 100 || $height < 100) return;
+        $this->canvasWidth = $width;
+        $this->canvasHeight = $height; 
+        return $this;
+    }
+
+    public function frame($xRatio, $yRatio)
+    {
+        if (!is_float($xRatio) || !is_float($yRatio)) return;
+        if ($xRatio <= 0.0 || $xRatio > 1.0) return;
+        if ($yRatio <= 0.0 || $yRatio > 1.0) return;
+        $this->frameXRatio = $xRatio;
+        $this->frameYRatio = $yRatio;
+        return $this;
+    }
+
+    public function bgcolor($color)
+    {
+        if (!$this->isColorCode($color)) return;
+        $this->canvasBackgroundColor = $color;
+        return $this;
+    }
+
+    public function axis($width, $color = null)
+    {
+        if (!is_int($width)) return;
+        if ($width < 1) return;
+        if (null !== $color && !$this->isColorCode($color)) return;
+        $this->axisWidth = $width;
+        if (null !== $color) $this->axisColor = $color;
+        return $this;
+    }
+
+    public function grid($width, $color = null)
+    {
+        if (!is_int($width)) return;
+        if ($width < 1) return;
+        if (null !== $color && !$this->isColorCode($color)) return;
+        $this->gridWidth = $width;
+        if (null !== $color) $this->gridColor = $color;
+        return $this;
+    }
+
+    public function color($color)
+    {
+        if (!$this->isColorCode($color)) return;
+        $this->barBackgroundColor = $color;
+        return $this;
+    }
+
+    public function border($width, $color)
+    {
+        if (!is_int($width)) return;
+        if ($width < 1) return;
+        if (!$this->isColorCode($color)) return;
+        $this->barBorderWidth = $width;
+        $this->barBorderColor = $color;
+        return $this;
+    }
+
+    public function fp($width, $color)
+    {
+        if (!is_int($width)) return;
+        if ($width < 1) return;
+        if (!$this->isColorCode($color)) return;
+        $this->frequencyPolygonWidth = $width;
+        $this->frequencyPolygonColor = $color;
+        return $this;
+    }
+
+    public function crfp($width, $color)
+    {
+        if (!is_int($width)) return;
+        if ($width < 1) return;
+        if (!$this->isColorCode($color)) return;
+        $this->cumulativeRelativeFrequencyPolygonWidth = $width;
+        $this->cumulativeRelativeFrequencyPolygonColor = $color;
+        return $this;
+    }
+
+    public function fontPath($path)
+    {
+        if (!is_string($path)) return;
+        if (strlen($path) < 5) return;
+        if (!file_exists($path)) return;
+        $pathinfo = pathinfo($path);
+        if (0 !== strcmp("ttf", strtolower($pathinfo['extension']))) return;
+        $this->fontPath = $path;
+        return $this;
+    }
+
+    public function fontSize($size)
+    {
+        if (!is_int($size)) return;
+        if ($size < 6) return;
+        $this->fontSize = $size;
+        return $this;
+    }
+
+    public function fontColor($color)
+    {
+        if (!$this->isColorCode($color)) return;
+        $this->fontColor = $color;
+        return $this;
+    }
+
+    public function isColorCode($color)
+    {
+        if (!is_string($color)) return false;
+        return preg_match('/^#[A-Fa-f0-9]{3}$|^#[A-Fa-f0-9]{6}$/', $color) ? true : false;
     }
     
     public function getConfig($key = null)
     {
         if (null === $key) {
             $config = [];
-            foreach (array_keys($this->configValidation) as $key) {
+            foreach ($this->validConfig as $key) {
                 $config[$key] = $this->{$key};
             }
             return $config;
         }
-        if (in_array($key, array_keys($this->configValidation))) return $this->{$key};
+        if (in_array($key, $this->validConfig)) return $this->{$key};
         return null;
     }
 
@@ -223,7 +232,7 @@ class Histogram
         ];
     }
 
-    public function setAxis()
+    public function plotAxis()
     {
         list($x1,$y1,$x2,$y2) = $this->getHorizontalAxisPosition();
         $this->image->line($x1,$y1,$x2,$y2,function ($draw) {
@@ -237,7 +246,7 @@ class Histogram
         });
     }
 
-    public function setGrids()
+    public function plotGrids()
     {
         for ($i = $this->barMinValue; $i <= $this->barMaxValue; $i += $this->gridHeightPitch) {
             $x1 = $this->baseX;
@@ -259,7 +268,7 @@ class Histogram
         }
     }
 
-    public function setGridValues()
+    public function plotGridValues()
     {
         for ($i = $this->barMinValue; $i <= $this->barMaxValue; $i += $this->gridHeightPitch) {
             $x = $this->baseX - $this->fontSize * 1.1;
@@ -267,7 +276,7 @@ class Histogram
             $this->image->text($i,$x,$y, function ($font) {
                 $font->file($this->fontPath);
                 $font->size($this->fontSize);
-                $font->color($this->classColor);
+                $font->color($this->fontColor);
                 $font->align('center');
                 $font->valign('bottom');
             });
@@ -284,7 +293,7 @@ class Histogram
         ];
     }
 
-    public function setBars()
+    public function plotBars()
     {
         if (!array_key_exists('Classes', $this->parsed)) return;
         if (!array_key_exists('Frequencies', $this->parsed))  return;
@@ -300,7 +309,7 @@ class Histogram
         }
     }
 
-    public function setClasses()
+    public function plotClasses()
     {
         if (!array_key_exists('Classes', $this->parsed)) return;
         $classes = $this->parsed['Classes'];
@@ -309,7 +318,7 @@ class Histogram
         $this->image->text($classes[0]['bottom'],$x,$y,function ($font) {
             $font->file($this->fontPath);
             $font->size($this->fontSize);
-            $font->color($this->classColor);
+            $font->color($this->fontColor);
             $font->align('center');
             $font->valign('bottom');
         });
@@ -319,14 +328,14 @@ class Histogram
             $this->image->text($class['top'],$x,$y,function ($font) {
                 $font->file($this->fontPath);
                 $font->size($this->fontSize);
-                $font->color($this->classColor);
+                $font->color($this->fontColor);
                 $font->align('center');
                 $font->valign('bottom');
             });
         }
     }
 
-    public function setFrequencyPolygon()
+    public function plotFrequencyPolygon()
     {
         if (!array_key_exists('Frequencies', $this->parsed)) return;
         $frequencies = $this->parsed['Frequencies'];
@@ -344,7 +353,7 @@ class Histogram
         }
     }
 
-    public function setCumulativeRelativeFrequencyPolygon()
+    public function plotCumulativeRelativeFrequencyPolygon()
     {
         if (!array_key_exists('Frequencies', $this->parsed)) return;
         $frequencies = $this->parsed['Frequencies'];
@@ -367,7 +376,7 @@ class Histogram
         }
     }
 
-    public function setFrequencies()
+    public function plotFrequencies()
     {
         if (!array_key_exists('Frequencies', $this->parsed)) return;
         $frequencies = $this->parsed['Frequencies'];
@@ -379,11 +388,57 @@ class Histogram
             $this->image->text($frequency, $x, $y, function ($font) {
                 $font->file($this->fontPath);
                 $font->size($this->fontSize);
-                $font->color($this->classColor);
+                $font->color($this->fontColor);
                 $font->align('center');
                 $font->valign('bottom');
             });
         }
+    }
+
+    public function plotLabelX()
+    {
+        $x = (int) $this->canvasWidth / 2;
+        $y = $this->baseY + (1 - $this->frameYRatio) * $this->canvasHeight / 3 ;
+        $this->image->text((string) $this->labelX, $x, $y, function ($font) {
+            $font->file($this->fontPath);
+            $font->size($this->fontSize);
+            $font->color($this->fontColor);
+            $font->align('center');
+            $font->valign('bottom');
+        });
+        return $this;
+    }
+
+    public function plotLabelY()
+    {
+        $width = $this->canvasHeight;
+        $height = (int) ($this->canvasWidth * (1 - $this->frameXRatio) / 3);
+        $image = Image::canvas($width, $height, $this->canvasBackgroundColor);
+        $x = $width / 2;
+        $y = ($height + $this->fontSize) / 2;
+        $image->text((string) $this->labelY, $x, $y, function ($font) {
+            $font->file($this->fontPath);
+            $font->size($this->fontSize);
+            $font->color($this->fontColor);
+            $font->align('center');
+            $font->valign('bottom');
+        });
+        $image->rotate(90);
+        $this->image->insert($image, 'left');
+        return $this;
+    }
+
+    public function plotCaption()
+    {
+        $x = $this->canvasWidth / 2;
+        $y = $this->canvasHeight * (1 - $this->frameYRatio) / 3;
+        $this->image->text((string) $this->caption, $x, $y, function ($font) {
+            $font->file($this->fontPath);
+            $font->size($this->fontSize);
+            $font->color($this->fontColor);
+            $font->align('center');
+            $font->valign('bottom');
+        });
     }
 
     private function setProperties()
@@ -401,28 +456,92 @@ class Histogram
         $this->image = Image::canvas($this->canvasWidth, $this->canvasHeight, $this->canvasBackgroundColor);
     }
 
-    public function create($filePath, $option = [
-        'bar' => true,
-        'frequencyPolygon' => false,
-        'cumulativeFrequencyPolygon' => false,
-        'frequency' => false,
-    ])
+    public function labelX($label)
+    {
+        if (!is_string($label)) return;
+        $this->labelX = $label;
+        return $this;
+    }
+
+    public function labelY($label)
+    {
+        if (!is_string($label)) return;
+        $this->labelY = $label;
+        return $this;
+    }
+
+    public function caption($caption)
+    {
+        if (!is_string($caption)) return;
+        $this->caption = $caption;
+        return $this;
+    }
+
+    public function barOn()
+    {
+        $this->showBar = true;
+        return $this;
+    }
+
+    public function barOff()
+    {
+        $this->showBar = false;
+        return $this;
+    }
+
+    public function fpOn()
+    {
+        $this->showFrequencyPolygon = true;
+        return $this;
+    }
+
+    public function fpOff()
+    {
+        $this->showFrequencyPolygon = false;
+        return $this;
+    }
+
+    public function crfpOn()
+    {
+        $this->showCumulativeRelativeFrequencyPolygon = true;
+        return $this;
+    }
+
+    public function crfpOff()
+    {
+        $this->showCumulativeRelativeFrequencyPolygon = false;
+        return $this;
+    }
+
+    public function frequencyOn()
+    {
+        $this->showFrequency = true;
+        return $this;
+    }
+
+    public function frequencyOff()
+    {
+        $this->showFrequency = false;
+        return $this;
+    }
+
+    public function create($filePath)
     {
         if (!is_string($filePath)) return;
         if (strlen($filePath) == 0) return;
         $this->setProperties();
-        $this->setGrids();
-        $this->setGridValues();
-        if (array_key_exists('bar', $option))
-            if ($option['bar']) $this->setBars();
-        $this->setAxis();
-        if (array_key_exists('frequencyPolygon', $option))
-            if ($option['frequencyPolygon']) $this->setFrequencyPolygon();
-        if (array_key_exists('cumulativeFrequencyPolygon', $option))
-            if ($option['cumulativeFrequencyPolygon']) $this->setCumulativeRelativeFrequencyPolygon();
-        $this->setClasses();
-        if (array_key_exists('frequency', $option))
-            if ($option['frequency']) $this->setFrequencies();
+        $this->plotGrids();
+        $this->plotGridValues();
+        if ($this->showBar) $this->plotBars();
+        $this->plotAxis();
+        if ($this->showFrequencyPolygon) $this->plotFrequencyPolygon();
+        if ($this->showCumulativeRelativeFrequencyPolygon) $this->plotCumulativeRelativeFrequencyPolygon();
+        $this->plotClasses();
+        if ($this->showFrequency) $this->plotFrequencies();
+        $this->plotLabelX();
+        $this->plotLabelY();
+        $this->plotCaption();
         $this->image->save($filePath);
+        return $this;
     }
 }
