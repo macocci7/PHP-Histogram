@@ -20,6 +20,7 @@
 - [2023-05-09](#2023-05-09)
 - [2023-05-15](#2023-05-15)
 - [2023-05-21](#2023-05-21)
+- [2023-05-27](#2023-05-27)
 
 ## 2023-03-30
 
@@ -399,4 +400,42 @@
 
 
 ![Histogram:2023-05-21](img/HistogramOhtaniShohei2023-05-21.png)
+
+
+## 2023-05-27
+
+<details><summary>Properties</summary>
+
+|Property|Value|
+|:---|---:|
+|ClassRange|5|
+|Max|101|
+|Min|79|
+|DataRange|22|
+|Mode|97.5|
+|Mean|90.4|
+|Median|91|
+|FirstQuartile|84|
+|ThirdQuartile|96|
+|InterQuartileRange|12|
+|QuartileDeviation|6|
+</details>
+
+<details><summary>Frequency Table</summary>
+
+|Class|Frequency|RelativeFrequency|ClassValue|ClassValue * Frequency|
+|:---:|:---:|:---:|:---:|---:|
+|75 ~ 80|1|0.01|77.5|77.5|
+|80 ~ 85|30|0.28|82.5|2,475.0|
+|85 ~ 90|20|0.18|87.5|1,750.0|
+|90 ~ 95|24|0.22|92.5|2,220.0|
+|95 ~ 100|31|0.28|97.5|3,022.5|
+|100 ~ 105|3|0.03|102.5|307.5|
+|Total|109|1.00|---|9,852.5|
+|Mean|---|---|---|90.4|
+</details>
+
+
+
+![Histogram:2023-05-27](img/HistogramOhtaniShohei2023-05-27.png)
 

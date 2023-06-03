@@ -28,10 +28,10 @@ class Histogram
     private $frequencyPolygonWidth = 2;
     private $cumulativeRelativeFrequencyPolygonColor = '#33ff66';
     private $cumulativeRelativeFrequencyPolygonWidth = 2;
-    private $classColor = '#333333';
     private $fontPath = 'fonts/ipaexg.ttf'; // IPA ex Gothic 00401
     //private $fontPath = 'fonts/ipaexm.ttf'; // IPA ex Mincho 00401
     private $fontSize = 16;
+    private $fontColor = '#333333';
     private $barMaxValue;
     private $barMinValue;
     private $baseX;
@@ -39,8 +39,11 @@ class Histogram
     private $parsed = [];
     private $showBar = true;
     private $showFrequencyPolygon = false;
-    private $showCumulativeFrequencyPolygon = false;
-    private $showfrequency = false;
+    private $showCumulativeRelativeFrequencyPolygon = false;
+    private $showFrequency = false;
+    private $labelX;
+    private $labelY;
+    private $caption;
     private $validConfig = [
         'canvasWidth',
         'canvasHeight',
@@ -59,9 +62,9 @@ class Histogram
         'frequencyPolygonWidth',
         'cumulativeRelativeFrequencyPolygonColor',
         'cumulativeRelativeFrequencyPolygonWidth',
-        'classColor',
         'fontPath',
         'fontSize',
+        'fontColor',
     ];
 
     public function __construct($width = 400, $height = 300)
@@ -90,6 +93,16 @@ class Histogram
         return $this;
     }
 
+    public function frame($xRatio, $yRatio)
+    {
+        if (!is_float($xRatio) || !is_float($yRatio)) return;
+        if ($xRatio <= 0.0 || $xRatio > 1.0) return;
+        if ($yRatio <= 0.0 || $yRatio > 1.0) return;
+        $this->frameXRatio = $xRatio;
+        $this->frameYRatio = $yRatio;
+        return $this;
+    }
+
     public function bgcolor($color)
     {
         if (!$this->isColorCode($color)) return;
@@ -114,6 +127,69 @@ class Histogram
         if (null !== $color && !$this->isColorCode($color)) return;
         $this->gridWidth = $width;
         if (null !== $color) $this->gridColor = $color;
+        return $this;
+    }
+
+    public function color($color)
+    {
+        if (!$this->isColorCode($color)) return;
+        $this->barBackgroundColor = $color;
+        return $this;
+    }
+
+    public function border($width, $color)
+    {
+        if (!is_int($width)) return;
+        if ($width < 1) return;
+        if (!$this->isColorCode($color)) return;
+        $this->barBorderWidth = $width;
+        $this->barBorderColor = $color;
+        return $this;
+    }
+
+    public function fp($width, $color)
+    {
+        if (!is_int($width)) return;
+        if ($width < 1) return;
+        if (!$this->isColorCode($color)) return;
+        $this->frequencyPolygonWidth = $width;
+        $this->frequencyPolygonColor = $color;
+        return $this;
+    }
+
+    public function crfp($width, $color)
+    {
+        if (!is_int($width)) return;
+        if ($width < 1) return;
+        if (!$this->isColorCode($color)) return;
+        $this->cumulativeRelativeFrequencyPolygonWidth = $width;
+        $this->cumulativeRelativeFrequencyPolygonColor = $color;
+        return $this;
+    }
+
+    public function fontPath($path)
+    {
+        if (!is_string($path)) return;
+        if (strlen($path) < 5) return;
+        if (!file_exists($path)) return;
+        $pathinfo = pathinfo($path);
+        if (0 !== strcmp("ttf", strtolower($pathinfo['extension']))) return;
+        $this->fontPath = $path;
+        return $this;
+    }
+
+    public function fontSize($size)
+    {
+        if (!is_int($size)) return;
+        if ($size < 6) return;
+        $this->fontSize = $size;
+        return $this;
+    }
+
+    public function fontColor($color)
+    {
+        if (!$this->isColorCode($color)) return;
+        $this->fontColor = $color;
         return $this;
     }
 
@@ -200,7 +276,7 @@ class Histogram
             $this->image->text($i,$x,$y, function ($font) {
                 $font->file($this->fontPath);
                 $font->size($this->fontSize);
-                $font->color($this->classColor);
+                $font->color($this->fontColor);
                 $font->align('center');
                 $font->valign('bottom');
             });
@@ -242,7 +318,7 @@ class Histogram
         $this->image->text($classes[0]['bottom'],$x,$y,function ($font) {
             $font->file($this->fontPath);
             $font->size($this->fontSize);
-            $font->color($this->classColor);
+            $font->color($this->fontColor);
             $font->align('center');
             $font->valign('bottom');
         });
@@ -252,7 +328,7 @@ class Histogram
             $this->image->text($class['top'],$x,$y,function ($font) {
                 $font->file($this->fontPath);
                 $font->size($this->fontSize);
-                $font->color($this->classColor);
+                $font->color($this->fontColor);
                 $font->align('center');
                 $font->valign('bottom');
             });
@@ -312,11 +388,57 @@ class Histogram
             $this->image->text($frequency, $x, $y, function ($font) {
                 $font->file($this->fontPath);
                 $font->size($this->fontSize);
-                $font->color($this->classColor);
+                $font->color($this->fontColor);
                 $font->align('center');
                 $font->valign('bottom');
             });
         }
+    }
+
+    public function plotLabelX()
+    {
+        $x = (int) $this->canvasWidth / 2;
+        $y = $this->baseY + (1 - $this->frameYRatio) * $this->canvasHeight / 3 ;
+        $this->image->text((string) $this->labelX, $x, $y, function ($font) {
+            $font->file($this->fontPath);
+            $font->size($this->fontSize);
+            $font->color($this->fontColor);
+            $font->align('center');
+            $font->valign('bottom');
+        });
+        return $this;
+    }
+
+    public function plotLabelY()
+    {
+        $width = $this->canvasHeight;
+        $height = (int) ($this->canvasWidth * (1 - $this->frameXRatio) / 3);
+        $image = Image::canvas($width, $height, $this->canvasBackgroundColor);
+        $x = $width / 2;
+        $y = ($height + $this->fontSize) / 2;
+        $image->text((string) $this->labelY, $x, $y, function ($font) {
+            $font->file($this->fontPath);
+            $font->size($this->fontSize);
+            $font->color($this->fontColor);
+            $font->align('center');
+            $font->valign('bottom');
+        });
+        $image->rotate(90);
+        $this->image->insert($image, 'left');
+        return $this;
+    }
+
+    public function plotCaption()
+    {
+        $x = $this->canvasWidth / 2;
+        $y = $this->canvasHeight * (1 - $this->frameYRatio) / 3;
+        $this->image->text((string) $this->caption, $x, $y, function ($font) {
+            $font->file($this->fontPath);
+            $font->size($this->fontSize);
+            $font->color($this->fontColor);
+            $font->align('center');
+            $font->valign('bottom');
+        });
     }
 
     private function setProperties()
@@ -332,6 +454,27 @@ class Histogram
         if ($this->gridHeightPitch < 0.2 * $this->barMaxValue)
             $this->gridHeightPitch = (int) (0.2 * $this->barMaxValue);
         $this->image = Image::canvas($this->canvasWidth, $this->canvasHeight, $this->canvasBackgroundColor);
+    }
+
+    public function labelX($label)
+    {
+        if (!is_string($label)) return;
+        $this->labelX = $label;
+        return $this;
+    }
+
+    public function labelY($label)
+    {
+        if (!is_string($label)) return;
+        $this->labelY = $label;
+        return $this;
+    }
+
+    public function caption($caption)
+    {
+        if (!is_string($caption)) return;
+        $this->caption = $caption;
+        return $this;
     }
 
     public function barOn()
@@ -367,6 +510,7 @@ class Histogram
     public function crfpOff()
     {
         $this->showCumulativeRelativeFrequencyPolygon = false;
+        return $this;
     }
 
     public function frequencyOn()
@@ -391,9 +535,12 @@ class Histogram
         if ($this->showBar) $this->plotBars();
         $this->plotAxis();
         if ($this->showFrequencyPolygon) $this->plotFrequencyPolygon();
-        if ($this->showCumulativeFrequencyPolygon) $this->plotCumulativeRelativeFrequencyPolygon();
+        if ($this->showCumulativeRelativeFrequencyPolygon) $this->plotCumulativeRelativeFrequencyPolygon();
         $this->plotClasses();
         if ($this->showFrequency) $this->plotFrequencies();
+        $this->plotLabelX();
+        $this->plotLabelY();
+        $this->plotCaption();
         $this->image->save($filePath);
         return $this;
     }

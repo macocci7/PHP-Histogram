@@ -55,8 +55,11 @@ $population = [
 ];
 
 $classRange = 1000000;  // 1 million
+$histogramPath = 'img/HistogramPopulationInJapan2022.png';
 
-$hg = new Histogram();
+$hg = new Histogram(1024, 768);
+$hg->frame(0.9, 0.7)
+   ->fontSize(10);
 $hg->ft->setClassRange($classRange);
 $hg->ft->setData($population);
 $hg->ft->setColumns2Show([ // Only specified columns will be shown.
@@ -68,23 +71,10 @@ $hg->ft->setColumns2Show([ // Only specified columns will be shown.
     'ClassValue',
     'ClassValue * Frequency',
 ]);
-/*
-$ft = new FrequencyTable([
-    'data' => $population,
-    'classRange' => $classRange,
-    'columns2Show' => [ // Only specified columns will be shown.
-        'Class',
-        'Frequency',
-        'CumulativeFrequency',
-        'RelativeFrequency',
-        'CumulativeRelativeFrequency',
-        'ClassValue',
-        'ClassValue * Frequency',
-    ],
-]);
-*/
+$hg->frequencyOn()->create($histogramPath);
 
 echo "# Population in Japan, in 2022\n";
+
 echo "<details><summary>使用データ(INPUT DATA)：総務省(Ministry of Internal Affairs and Communications)</summary>\n\n<br />\n\n";
 echo "**Population In Japan, in 2022**\n<br />\n\n";
 echo "|Prefecture|Population|\n";
@@ -93,18 +83,10 @@ foreach($population as $key => $value) {
     echo sprintf("|%s|%s|\n",$key,number_format($value));
 }
 echo "</details>\n\n<br />\n\n";
-echo "<details><summary>Frequency Table</summary>\n\n";
-$hg->ft->show();
-echo "\n</details>\n\n\n";
 
-$histogramPath = 'img/HistogramPopulationInJapan2022.png';
-$config = [
-    'canvasWidth' => 1024,
-    'canvasHeight' => 768,
-    'frameXRatio' => 0.9,
-    'fontSize' => 10,
-];
-$hg->configure($config);
-$hg->create($histogramPath, ['bar' => true, 'frequency' => true]);
+echo "<details><summary>Frequency Table</summary>\n\n";
+$hg->ft->meanOn()->show();
+echo "\n\n</details>\n\n\n";
+
 echo "## Histogram\n\n";
 echo '<img src="' . $histogramPath . '" width="1024" height="768">' . "\n\n";

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9596e9816e2a9291110720b8a2bd4dd3",
+    "content-hash": "3220f14c9f3df4916960884350f0ee0a",
     "packages": [
         {
             "name": "guzzlehttp/psr7",
@@ -208,16 +208,16 @@
         },
         {
             "name": "macocci7/php-frequency-table",
-            "version": "1.0.5",
+            "version": "1.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/macocci7/PHP-FrequencyTable.git",
-                "reference": "fb65f48ac943efe4ce50589202e877ccb6b85f15"
+                "reference": "67ea577c6a27fafdea555d0f6756522f82fd3d43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/macocci7/PHP-FrequencyTable/zipball/fb65f48ac943efe4ce50589202e877ccb6b85f15",
-                "reference": "fb65f48ac943efe4ce50589202e877ccb6b85f15",
+                "url": "https://api.github.com/repos/macocci7/PHP-FrequencyTable/zipball/67ea577c6a27fafdea555d0f6756522f82fd3d43",
+                "reference": "67ea577c6a27fafdea555d0f6756522f82fd3d43",
                 "shasum": ""
             },
             "type": "library",
@@ -239,9 +239,9 @@
             "description": "it's easy to use for creating frequency distribution tables.",
             "support": {
                 "issues": "https://github.com/macocci7/PHP-FrequencyTable/issues",
-                "source": "https://github.com/macocci7/PHP-FrequencyTable/tree/1.0.5"
+                "source": "https://github.com/macocci7/PHP-FrequencyTable/tree/1.1.3"
             },
-            "time": "2023-05-27T12:57:05+00:00"
+            "time": "2023-06-03T05:21:47+00:00"
         },
         {
             "name": "psr/http-factory",
