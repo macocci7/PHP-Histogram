@@ -79,8 +79,8 @@ echo "<details><summary>使用データ(INPUT DATA)：総務省(Ministry of Inte
 echo "**Population In Japan, in 2022**\n<br />\n\n";
 echo "|Prefecture|Population|\n";
 echo "|:---:|---:|\n";
-foreach($population as $key => $value) {
-    echo sprintf("|%s|%s|\n",$key,number_format($value));
+foreach ($population as $key => $value) {
+    echo sprintf("|%s|%s|\n", $key, number_format($value));
 }
 echo "</details>\n\n<br />\n\n";
 
