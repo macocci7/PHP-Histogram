@@ -38,21 +38,6 @@ final class HistogramTest extends TestCase
     public function test_size_can_return_size_correctly(): void
     {
         $cases = [
-            ['width' => null, 'height' => null, 'expect' => null],
-            ['width' => true, 'height' => null, 'expect' => null],
-            ['width' => false, 'height' => null, 'expect' => null],
-            ['width' => '0', 'height' => null, 'expect' => null],
-            ['width' => [], 'height' => null, 'expect' => null],
-            ['width' => 1.2, 'height' => null, 'expect' => null],
-            ['width' => 1, 'height' => null, 'expect' => null],
-            ['width' => 100, 'height' => null, 'expect' => null],
-            ['width' => null, 'height' => true, 'expect' => null],
-            ['width' => null, 'height' => false, 'expect' => null],
-            ['width' => null, 'height' => '0', 'expect' => null],
-            ['width' => null, 'height' => [], 'expect' => null],
-            ['width' => null, 'height' => 1.2, 'expect' => null],
-            ['width' => null, 'height' => 1, 'expect' => null],
-            ['width' => null, 'height' => 100, 'expect' => null],
             ['width' => 100, 'height' => 1, 'expect' => null],
             ['width' => 1, 'height' => 100, 'expect' => null],
             ['width' => 100, 'height' => 100, 'expect' => ['width' => 100, 'height' => 100]],
@@ -65,33 +50,21 @@ final class HistogramTest extends TestCase
         }
     }
 
-    public function test_frame_can_return_null_with_invalid_parameter(): void
+    public function test_frame_can_throw_exception_with_invalid_parameter(): void
     {
         $cases = [
-            ['x' => null, 'y' => 0.5, ],
-            ['x' => true, 'y' => 0.5, ],
-            ['x' => false, 'y' => 0.5, ],
             ['x' => -0.5, 'y' => 0.5, ],
-            ['x' => 0, 'y' => 0.5, ],
-            ['x' => 1.2, 'y' => 0.5, ],
-            ['x' => [], 'y' => 0.5, ],
-            ['x' => '', 'y' => 0.5, ],
-            ['x' => '0.5', 'y' => 0.5, ],
-
-            ['x' => 0.5, 'y' => null, ],
-            ['x' => 0.5, 'y' => true, ],
-            ['x' => 0.5, 'y' => false, ],
+            ['x' => 0.0, 'y' => 0.5, ],
+            ['x' => 1.1, 'y' => 0.5, ],
             ['x' => 0.5, 'y' => -0.5, ],
-            ['x' => 0.5, 'y' => 0, ],
-            ['x' => 0.5, 'y' => 1.2, ],
-            ['x' => 0.5, 'y' => [], ],
-            ['x' => 0.5, 'y' => '', ],
-            ['x' => 0.5, 'y' => '0.5', ],
+            ['x' => 0.5, 'y' => 0.0, ],
+            ['x' => 0.5, 'y' => 1.1, ],
         ];
         $hg = new Histogram();
 
         foreach ($cases as $index => $case) {
-            $this->assertNull($hg->frame($case['x'], $case['y']));
+            $this->expectException(\Exception::class);
+            $hg->frame($case['x'], $case['y']);
         }
     }
 
@@ -102,13 +75,8 @@ final class HistogramTest extends TestCase
         $y = $hg->getConfig('frameYRatio');
         unset($hg);
         $cases = [
-            ['x' => null, 'y' => null, 'expect' => ['x' => $x, 'y' => $y, ], ],
-            ['x' => 0.5, 'y' => null, 'expect' => ['x' => $x, 'y' => $y, ], ],
-            ['x' => null, 'y' => 0.5, 'expect' => ['x' => $x, 'y' => $y, ], ],
             ['x' => 0.2, 'y' => 0.3, 'expect' => ['x' => 0.2, 'y' => 0.3, ], ],
             ['x' => 1.0, 'y' => 1.0, 'expect' => ['x' => 1.0, 'y' => 1.0, ], ],
-            ['x' => 0.0, 'y' => 0.0, 'expect' => ['x' => $x, 'y' => $y, ], ],
-            ['x' => 1.1, 'y' => 1.1, 'expect' => ['x' => $x, 'y' => $y, ], ],
         ];
 
         foreach ($cases as $index => $case) {
@@ -120,18 +88,31 @@ final class HistogramTest extends TestCase
         }
     }
 
+    public function test_bgcolor_can_throw_exception_with_invalid_param(): void
+    {
+        $cases = [
+            //['color' => ''],
+            ['color' => 'red'],
+            ['color' => 'fff'],
+            ['color' => 'ffffff'],
+            ['color' => '#ff'],
+            ['color' => '#ffff'],
+            ['color' => '#fffff'],
+            ['color' => '#fffffff'],
+        ];
+        foreach ($cases as $case) {
+            $hg = new Histogram();
+            $this->expectException(\Exception::class);
+            $hg->bgcolor($case['color']);
+        }
+    }
+
     public function test_bgcolor_can_work_correctly(): void
     {
         $cases = [
-            ['color' => null, 'expect' => '#ffffff'],
-            ['color' => true, 'expect' => '#ffffff'],
-            ['color' => false, 'expect' => '#ffffff'],
-            ['color' => 0, 'expect' => '#ffffff'],
-            ['color' => 1.2, 'expect' => '#ffffff'],
-            ['color' => '', 'expect' => '#ffffff'],
-            ['color' => [], 'expect' => '#ffffff'],
-            ['color' => 'red', 'expect' => '#ffffff'],
-            ['color' => '000000', 'expect' => '#ffffff'],
+            ['color' => '#fff', 'expect' => '#fff'],
+            ['color' => '#ff0000', 'expect' => '#ff0000'],
+            ['color' => '#00ff00', 'expect' => '#00ff00'],
             ['color' => '#0000ff', 'expect' => '#0000ff'],
         ];
 
@@ -143,15 +124,9 @@ final class HistogramTest extends TestCase
         }
     }
 
-    public function test_axis_can_return_null_with_invalid_params(): void
+    public function test_axis_can_throw_exception_with_invalid_params(): void
     {
         $cases = [
-            ['width' => null, 'color' => null, ],
-            ['width' => true, 'color' => null, ],
-            ['width' => false, 'color' => null, ],
-            ['width' => 1.2, 'color' => null, ],
-            ['width' => '1', 'color' => null, ],
-            ['width' => [], 'color' => null, ],
             ['width' => -1, 'color' => null, ],
             ['width' => 0, 'color' => null, ],
             ['width' => 1, 'color' => true, ],
@@ -169,9 +144,9 @@ final class HistogramTest extends TestCase
             ['width' => 1, 'color' => '#fffffff', ],
         ];
         $hg = new Histogram();
-
         foreach ($cases as $index => $case) {
-            $this->assertNull($hg->axis($case['width'], $case['color']));
+            $this->expectException(\Exception::class);
+            $hg->axis($case['width'], $case['color']);
         }
     }
 
@@ -187,7 +162,6 @@ final class HistogramTest extends TestCase
             ['width' => 3, 'color' => '#ffffff', 'expect' => ['width' => 3, 'color' => '#ffffff'], ],
         ];
         unset($hg);
-
         foreach ($cases as $index => $case) {
             $hg = new Histogram();
             $hg->axis($case['width'], $case['color']);
@@ -197,15 +171,9 @@ final class HistogramTest extends TestCase
         }
     }
 
-    public function test_grid_can_return_null_with_invalid_params(): void
+    public function test_grid_can_throw_exception_with_invalid_params(): void
     {
         $cases = [
-            ['width' => null, 'color' => null, ],
-            ['width' => true, 'color' => null, ],
-            ['width' => false, 'color' => null, ],
-            ['width' => 1.2, 'color' => null, ],
-            ['width' => '1', 'color' => null, ],
-            ['width' => [], 'color' => null, ],
             ['width' => -1, 'color' => null, ],
             ['width' => 0, 'color' => null, ],
             ['width' => 1, 'color' => true, ],
@@ -223,9 +191,9 @@ final class HistogramTest extends TestCase
             ['width' => 1, 'color' => '#fffffff', ],
         ];
         $hg = new Histogram();
-
         foreach ($cases as $index => $case) {
-            $this->assertNull($hg->grid($case['width'], $case['color']));
+            $this->expectException(\Exception::class);
+            $hg->grid($case['width'], $case['color']);
         }
     }
 
@@ -241,7 +209,6 @@ final class HistogramTest extends TestCase
             ['width' => 3, 'color' => '#ffffff', 'expect' => ['width' => 3, 'color' => '#ffffff'], ],
         ];
         unset($hg);
-
         foreach ($cases as $index => $case) {
             $hg = new Histogram();
             $hg->grid($case['width'], $case['color']);
@@ -251,15 +218,9 @@ final class HistogramTest extends TestCase
         }
     }
 
-    public function test_color_can_return_null_with_invalid_param(): void
+    public function test_color_can_throw_exception_with_invalid_param(): void
     {
         $cases = [
-            ['color' => null, ],
-            ['color' => true, ],
-            ['color' => false, ],
-            ['color' => 0, ],
-            ['color' => 1.2, ],
-            ['color' => [], ],
             ['color' => '', ],
             ['color' => '0', ],
             ['color' => 'fff', ],
@@ -272,9 +233,9 @@ final class HistogramTest extends TestCase
             ['color' => '#fffffff', ],
         ];
         $hg = new Histogram();
-
         foreach ($cases as $index => $case) {
-            $this->assertNull($hg->color($case['color']));
+            $this->expectException(\Exception::class);
+            $hg->color($case['color']);
         }
     }
 
@@ -283,20 +244,10 @@ final class HistogramTest extends TestCase
         $hg = new Histogram();
         $defaultColor = $hg->getConfig('barBackgroundColor');
         $cases = [
-            ['color' => null, 'expect' => $defaultColor, ],
-            ['color' => true, 'expect' => $defaultColor, ],
-            ['color' => false, 'expect' => $defaultColor, ],
-            ['color' => 0, 'expect' => $defaultColor, ],
-            ['color' => 1.2, 'expect' => $defaultColor, ],
-            ['color' => [], 'expect' => $defaultColor, ],
-            ['color' => '', 'expect' => $defaultColor, ],
-            ['color' => 'fff', 'expect' => $defaultColor, ],
-            ['color' => 'ffffff', 'expect' => $defaultColor, ],
             ['color' => '#000', 'expect' => '#000', ],
             ['color' => '#000000', 'expect' => '#000000', ],
         ];
         unset($hg);
-
         foreach ($cases as $index => $case) {
             $hg = new Histogram();
             $hg->color($case['color']);
@@ -305,18 +256,12 @@ final class HistogramTest extends TestCase
         }
     }
 
-    public function test_border_can_return_null_with_invalid_parameter(): void
+    public function test_border_can_throw_exception_with_invalid_parameter(): void
     {
         $cases = [
-            ['width' => null, 'color' => null, ],
-            ['width' => true, 'color' => null, ],
-            ['width' => false, 'color' => null, ],
             ['width' => 0, 'color' => null, ],
             ['width' => -1, 'color' => null, ],
             ['width' => 1, 'color' => null, ],
-            ['width' => 1.2, 'color' => null, ],
-            ['width' => [], 'color' => null, ],
-            ['width' => '', 'color' => null, ],
             ['width' => 1, 'color' => null, ],
             ['width' => 1, 'color' => true, ],
             ['width' => 1, 'color' => false, ],
@@ -335,9 +280,9 @@ final class HistogramTest extends TestCase
             ['width' => 1, 'color' => '#0000000', ],
         ];
         $hg = new Histogram();
-
         foreach ($cases as $index => $case) {
-            $this->assertNull($hg->border($case['width'], $case['color']));
+            $this->expectException(\Exception::class);
+            $hg->border($case['width'], $case['color']);
         }
     }
 
@@ -348,29 +293,10 @@ final class HistogramTest extends TestCase
         $color = $hg->getConfig('barBorderColor');
         unset($hg);
         $cases = [
-            ['width' => null, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => true, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => false, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 0, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => -1, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 1, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 1.2, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => [], 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => '', 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => true, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => false, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => 0, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => 1.2, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => [], 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => '', 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => 'black', 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => '000', 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => '000000', 'expect' => ['width' => $width, 'color' => $color, ], ],
+            ['width' => 1, 'color' => null, 'expect' => ['width' => 1, 'color' => $color, ], ],
+            ['width' => 2, 'color' => null, 'expect' => ['width' => 2, 'color' => $color, ], ],
             ['width' => 2, 'color' => '#000', 'expect' => ['width' => 2, 'color' => '#000', ], ],
-            ['width' => 2, 'color' => '#00g', 'expect' => ['width' => $width, 'color' => $color, ], ],
             ['width' => 2, 'color' => '#000000', 'expect' => ['width' => 2, 'color' => '#000000', ], ],
-            ['width' => 2, 'color' => '#00000g', 'expect' => ['width' => $width, 'color' => $color, ], ],
         ];
 
         foreach ($cases as $index => $case) {
@@ -382,18 +308,12 @@ final class HistogramTest extends TestCase
         }
     }
 
-    public function test_fp_can_return_null_with_invalid_parameter(): void
+    public function test_fp_can_throw_exception_with_invalid_parameter(): void
     {
         $cases = [
-            ['width' => null, 'color' => null, ],
-            ['width' => true, 'color' => null, ],
-            ['width' => false, 'color' => null, ],
             ['width' => 0, 'color' => null, ],
             ['width' => -1, 'color' => null, ],
             ['width' => 1, 'color' => null, ],
-            ['width' => 1.2, 'color' => null, ],
-            ['width' => [], 'color' => null, ],
-            ['width' => '', 'color' => null, ],
             ['width' => 1, 'color' => null, ],
             ['width' => 1, 'color' => true, ],
             ['width' => 1, 'color' => false, ],
@@ -412,9 +332,9 @@ final class HistogramTest extends TestCase
             ['width' => 1, 'color' => '#0000000', ],
         ];
         $hg = new Histogram();
-
         foreach ($cases as $index => $case) {
-            $this->assertNull($hg->fp($case['width'], $case['color']));
+            $this->expectException(\Exception::class);
+            $hg->fp($case['width'], $case['color']);
         }
     }
 
@@ -425,31 +345,11 @@ final class HistogramTest extends TestCase
         $color = $hg->getConfig('frequencyPolygonColor');
         unset($hg);
         $cases = [
-            ['width' => null, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => true, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => false, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 0, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => -1, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 1, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 1.2, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => [], 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => '', 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => true, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => false, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => 0, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => 1.2, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => [], 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => '', 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => 'black', 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => '000', 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => '000000', 'expect' => ['width' => $width, 'color' => $color, ], ],
+            ['width' => 1, 'color' => null, 'expect' => ['width' => 1, 'color' => $color, ], ],
+            ['width' => 2, 'color' => null, 'expect' => ['width' => 2, 'color' => $color, ], ],
             ['width' => 2, 'color' => '#000', 'expect' => ['width' => 2, 'color' => '#000', ], ],
-            ['width' => 2, 'color' => '#00g', 'expect' => ['width' => $width, 'color' => $color, ], ],
             ['width' => 2, 'color' => '#000000', 'expect' => ['width' => 2, 'color' => '#000000', ], ],
-            ['width' => 2, 'color' => '#00000g', 'expect' => ['width' => $width, 'color' => $color, ], ],
         ];
-
         foreach ($cases as $index => $case) {
             $hg = new Histogram();
             $hg->fp($case['width'], $case['color']);
@@ -459,19 +359,11 @@ final class HistogramTest extends TestCase
         }
     }
 
-    public function test_crfp_can_return_null_with_invalid_parameter(): void
+    public function test_crfp_can_throw_exception_with_invalid_parameter(): void
     {
         $cases = [
-            ['width' => null, 'color' => null, ],
-            ['width' => true, 'color' => null, ],
-            ['width' => false, 'color' => null, ],
             ['width' => 0, 'color' => null, ],
             ['width' => -1, 'color' => null, ],
-            ['width' => 1, 'color' => null, ],
-            ['width' => 1.2, 'color' => null, ],
-            ['width' => [], 'color' => null, ],
-            ['width' => '', 'color' => null, ],
-            ['width' => 1, 'color' => null, ],
             ['width' => 1, 'color' => true, ],
             ['width' => 1, 'color' => false, ],
             ['width' => 1, 'color' => 0, ],
@@ -489,9 +381,9 @@ final class HistogramTest extends TestCase
             ['width' => 1, 'color' => '#0000000', ],
         ];
         $hg = new Histogram();
-
         foreach ($cases as $index => $case) {
-            $this->assertNull($hg->crfp($case['width'], $case['color']));
+            $this->expectException(\Exception::class);
+            $hg->crfp($case['width'], $case['color']);
         }
     }
 
@@ -502,31 +394,11 @@ final class HistogramTest extends TestCase
         $color = $hg->getConfig('cumulativeRelativeFrequencyPolygonColor');
         unset($hg);
         $cases = [
-            ['width' => null, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => true, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => false, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 0, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => -1, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 1, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 1.2, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => [], 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => '', 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => null, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => true, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => false, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => 0, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => 1.2, 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => [], 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => '', 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => 'black', 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => '000', 'expect' => ['width' => $width, 'color' => $color, ], ],
-            ['width' => 2, 'color' => '000000', 'expect' => ['width' => $width, 'color' => $color, ], ],
+            ['width' => 1, 'color' => null, 'expect' => ['width' => 1, 'color' => $color, ], ],
+            ['width' => 2, 'color' => null, 'expect' => ['width' => 2, 'color' => $color, ], ],
             ['width' => 2, 'color' => '#000', 'expect' => ['width' => 2, 'color' => '#000', ], ],
-            ['width' => 2, 'color' => '#00g', 'expect' => ['width' => $width, 'color' => $color, ], ],
             ['width' => 2, 'color' => '#000000', 'expect' => ['width' => 2, 'color' => '#000000', ], ],
-            ['width' => 2, 'color' => '#00000g', 'expect' => ['width' => $width, 'color' => $color, ], ],
         ];
-
         foreach ($cases as $index => $case) {
             $hg = new Histogram();
             $hg->crfp($case['width'], $case['color']);
@@ -536,49 +408,18 @@ final class HistogramTest extends TestCase
         }
     }
 
-    public function test_fontColor_can_set_color(): void
-    {
-        $hg = new Histogram();
-        $defaultColor = $hg->getConfig('fontColor');
-        $cases = [
-            ['color' => null, 'expect' => $defaultColor, ],
-            ['color' => true, 'expect' => $defaultColor, ],
-            ['color' => false, 'expect' => $defaultColor, ],
-            ['color' => 0, 'expect' => $defaultColor, ],
-            ['color' => 1.2, 'expect' => $defaultColor, ],
-            ['color' => [], 'expect' => $defaultColor, ],
-            ['color' => '', 'expect' => $defaultColor, ],
-            ['color' => 'fff', 'expect' => $defaultColor, ],
-            ['color' => 'ffffff', 'expect' => $defaultColor, ],
-            ['color' => '#000', 'expect' => '#000', ],
-            ['color' => '#000000', 'expect' => '#000000', ],
-        ];
-        unset($hg);
-
-        foreach ($cases as $index => $case) {
-            $hg = new Histogram();
-            $hg->fontColor($case['color']);
-            $this->assertSame($case['expect'], $hg->getConfig('fontColor'));
-            unset($hg);
-        }
-    }
-
-    public function test_fontPath_can_return_null_with_invalid_parameter(): void
+    public function test_fontPath_can_throw_exception_with_invalid_parameter(): void
     {
         $cases = [
-            ['path' => null, ],
-            ['path' => true, ],
-            ['path' => false, ],
-            ['path' => 0, ],
-            ['path' => 1.2, ],
-            ['path' => [], ],
             ['path' => '', ],
             ['path' => '.ttf', ],
+            ['path' => 'nonexistent.ttf', ],
+            ['path' => 'example/class/fonts/dummy.otf', ],
         ];
         $hg = new Histogram();
-
         foreach ($cases as $index => $case) {
-            $this->assertNull($hg->fontPath($case['path']));
+            $this->expectException(\Exception::class);
+            $hg->fontPath($case['path']);
         }
     }
 
@@ -588,19 +429,9 @@ final class HistogramTest extends TestCase
         $path = $hg->getConfig('fontPath');
         unset($hg);
         $cases = [
-            ['path' => null, 'expect' => $path, ],
-            ['path' => true, 'expect' => $path, ],
-            ['path' => false, 'expect' => $path, ],
-            ['path' => 0, 'expect' => $path, ],
-            ['path' => 1.2, 'expect' => $path, ],
-            ['path' => [], 'expect' => $path, ],
-            ['path' => '', 'expect' => $path, ],
-            ['path' => '.ttf', 'expect' => $path, ],
-            ['path' => 'hogehoge.tty', 'expect' => $path, ],
             ['path' => 'examples/fonts/ipaexg.ttf', 'expect' => 'examples/fonts/ipaexg.ttf', ],
-            ['path' => '/usr/share/fonts/truetype/ubuntu/Ubuntu-C.ttf', 'expect' => '/usr/share/fonts/truetype/ubuntu/Ubuntu-C.ttf', ],
+            ['path' => 'examples/fonts/ipaexm.ttf', 'expect' => 'examples/fonts/ipaexm.ttf', ],
         ];
-
         foreach ($cases as $index => $case) {
             $hg = new Histogram();
             $hg->fontPath($case['path']);
@@ -609,24 +440,21 @@ final class HistogramTest extends TestCase
         }
     }
 
-    public function test_fontSize_can_return_null_with_invalid_parameter(): void
+    public function test_fontSize_can_throw_exception_with_invalid_parameter(): void
     {
         $cases = [
-            ['size' => null, ],
-            ['size' => true, ],
-            ['size' => false, ],
-            ['size' => 0, ],
-            ['size' => 1.2, ],
-            ['size' => [], ],
-            ['size' => '', ],
-            ['size' => '12', ],
             ['size' => -1, ],
+            ['size' => 0, ],
+            ['size' => 1, ],
+            ['size' => 2, ],
+            ['size' => 3, ],
+            ['size' => 4, ],
             ['size' => 5, ],
         ];
-
         $hg = new Histogram();
         foreach ($cases as $index => $case) {
-            $this->assertNull($hg->fontSize($case['size']));
+            $this->expectException(\Exception::class);
+            $hg->fontSize($case['size']);
         }
     }
 
@@ -636,20 +464,9 @@ final class HistogramTest extends TestCase
         $size = $hg->getConfig('fontSize');
         unset($hg);
         $cases = [
-            ['size' => null, 'expect' => $size, ],
-            ['size' => true, 'expect' => $size, ],
-            ['size' => false, 'expect' => $size, ],
-            ['size' => 0, 'expect' => $size, ],
-            ['size' => 1.2, 'expect' => $size, ],
-            ['size' => [], 'expect' => $size, ],
-            ['size' => '', 'expect' => $size, ],
-            ['size' => '12', 'expect' => $size, ],
-            ['size' => -12, 'expect' => $size, ],
-            ['size' => 5, 'expect' => $size, ],
             ['size' => 6, 'expect' => 6, ],
             ['size' => 32, 'expect' => 32, ],
         ];
-
         foreach ($cases as $index => $case) {
             $hg = new Histogram();
             $hg->fontSize($case['size']);
@@ -658,15 +475,9 @@ final class HistogramTest extends TestCase
         }
     }
 
-    public function test_fontColor_can_return_null_with_invalid_param(): void
+    public function test_fontColor_can_throw_exception_with_invalid_param(): void
     {
         $cases = [
-            ['color' => null, ],
-            ['color' => true, ],
-            ['color' => false, ],
-            ['color' => 0, ],
-            ['color' => 1.2, ],
-            ['color' => [], ],
             ['color' => '', ],
             ['color' => '0', ],
             ['color' => 'fff', ],
@@ -679,9 +490,27 @@ final class HistogramTest extends TestCase
             ['color' => '#fffffff', ],
         ];
         $hg = new Histogram();
+        foreach ($cases as $index => $case) {
+            $this->expectException(\Exception::class);
+            $hg->fontColor($case['color']);
+        }
+    }
+
+    public function test_fontColor_can_set_color(): void
+    {
+        $hg = new Histogram();
+        $defaultColor = $hg->getConfig('fontColor');
+        $cases = [
+            ['color' => '#ccc', 'expect' => '#ccc', ],
+            ['color' => '#cccccc', 'expect' => '#cccccc', ],
+        ];
+        unset($hg);
 
         foreach ($cases as $index => $case) {
-            $this->assertNull($hg->fontColor($case['color']));
+            $hg = new Histogram();
+            $hg->fontColor($case['color']);
+            $this->assertSame($case['expect'], $hg->getConfig('fontColor'));
+            unset($hg);
         }
     }
 
@@ -715,7 +544,6 @@ final class HistogramTest extends TestCase
             ['color' => '#0000000', 'expect' => false, ],
         ];
         $hg = new Histogram();
-
         foreach ($cases as $index => $case) {
             $this->assertSame($case['expect'], $hg->isColorCode($case['color']));
         }

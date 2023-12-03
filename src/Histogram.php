@@ -67,7 +67,13 @@ class Histogram
         'fontColor',
     ];
 
-    public function __construct($width = 400, $height = 300)
+    /**
+     * constructor
+     * @param   int $width  default: 400(px as canvas width)
+     * @param   int $height default: 300(px as canvas height)
+     * @return  self
+     */
+    public function __construct(int $width = 400, int $height = 300)
     {
         Image::configure(['driver' => 'imagick']);
         $this->ft = new FrequencyTable();
@@ -75,6 +81,11 @@ class Histogram
         return $this;
     }
 
+    /**
+     * returns current canvas size
+     * @param
+     * @return  array   [width(px), height(px)]
+     */
     public function size()
     {
         if (null === $this->canvasWidth || null === $this->canvasHeight) {
@@ -86,12 +97,18 @@ class Histogram
         ];
     }
 
-    public function resize($width, $height)
+    /**
+     * resizes the canvas size
+     * @param   int $width  specify in pix at least 50
+     * @param   int $height specify in pix at least 50
+     * @return  self
+     */
+    public function resize(int $width, int $height)
     {
         if (!is_int($width) && !is_int($height)) {
             return;
         }
-        if ($width < 100 || $height < 100) {
+        if ($width < 50 || $height < 50) {
             return;
         }
         $this->canvasWidth = $width;
@@ -99,164 +116,209 @@ class Histogram
         return $this;
     }
 
-    public function frame($xRatio, $yRatio)
+    /**
+     * sets the frame ratio of the histogram area to the canvas size
+     * @param   float   $xRatio (0.0 < $xRatio < 1.0)
+     * @param   float   $yRatio (0.0 < $yRatio < 1.0)
+     * @return  self
+     */
+    public function frame(float $xRatio, float $yRatio)
     {
-        if (!is_float($xRatio) || !is_float($yRatio)) {
-            return;
-        }
         if ($xRatio <= 0.0 || $xRatio > 1.0) {
-            return;
+            throw new \Exception("Ratio must be: 0.0 < ratio <= 1.0.");
         }
         if ($yRatio <= 0.0 || $yRatio > 1.0) {
-            return;
+            throw new \Exception("Ratio must be: 0.0 < ratio <= 1.0.");
         }
         $this->frameXRatio = $xRatio;
         $this->frameYRatio = $yRatio;
         return $this;
     }
 
-    public function bgcolor($color)
+    /**
+     * sets the background color of the canvas
+     * @param   string  $color  in '#rrggbb' format
+     * @return  self
+     */
+    public function bgcolor(string $color)
     {
         if (!$this->isColorCode($color)) {
-            return;
+            throw new \Exception("specify the color code in '#rrggbb' format.");
         }
         $this->canvasBackgroundColor = $color;
         return $this;
     }
 
-    public function axis($width, $color = null)
+    /**
+     * sets attributes of axis.
+     * @param   int     $width  in pix
+     * @param   string  $color  in '#rrggbb' format, null as default
+     * @return  self
+     */
+    public function axis(int $width, $color = null)
     {
-        if (!is_int($width)) {
-            return;
-        }
         if ($width < 1) {
-            return;
+            throw new \Exception("width must be more than zero.");
         }
-        if (null !== $color && !$this->isColorCode($color)) {
-            return;
+        if (!is_null($color) && !$this->isColorCode($color)) {
+            throw new \Exception("specify color code in '#rrggbb' format.");
         }
         $this->axisWidth = $width;
-        if (null !== $color) {
+        if (!is_null($color)) {
             $this->axisColor = $color;
         }
         return $this;
     }
 
-    public function grid($width, $color = null)
+    /**
+     * sets attributes of the grid
+     * @param   int     $width  in pix
+     * @param   string  $color  in '#rrggbb' format
+     * @return  self
+     */
+    public function grid(int $width, $color = null)
     {
-        if (!is_int($width)) {
-            return;
-        }
         if ($width < 1) {
-            return;
+            throw new \Exception("width must be more than zero.");
         }
         if (null !== $color && !$this->isColorCode($color)) {
-            return;
+            throw new \Exception("specify color code in '#rrggbb' format.");
         }
         $this->gridWidth = $width;
-        if (null !== $color) {
+        if (!is_null($color)) {
             $this->gridColor = $color;
         }
         return $this;
     }
 
+    /**
+     * sets the background color of histogram-bars
+     * @param   string  $color in '#rrggbb' format
+     * @return  self
+     */
     public function color($color)
     {
         if (!$this->isColorCode($color)) {
-            return;
+            throw new \Exception("specify color code in '#rrggbb' format.");
         }
         $this->barBackgroundColor = $color;
         return $this;
     }
 
-    public function border($width, $color)
+    /**
+     * sets attributes of the border of histogram-bar
+     * @param   int     $width  in pix
+     * @param   string  $color  in '#rrggbb' format
+     * @return  self
+     */
+    public function border(int $width, $color = null)
     {
-        if (!is_int($width)) {
-            return;
-        }
         if ($width < 1) {
-            return;
+            throw new \Exception("width must be more than zero.");
         }
-        if (!$this->isColorCode($color)) {
-            return;
+        if (!is_null($color) && !$this->isColorCode($color)) {
+            throw new \Exception("specify the color code in '#rrggbb' format.");
         }
         $this->barBorderWidth = $width;
-        $this->barBorderColor = $color;
+        if (!is_null($color)) {
+            $this->barBorderColor = $color;
+        }
         return $this;
     }
 
-    public function fp($width, $color)
+    /**
+     * sets attributes of the frequency polygon
+     * @param   int     $width  in pix
+     * @param   string  $color  in '#rrggbb' format
+     * @return  self
+     */
+    public function fp(int $width, $color = null)
     {
-        if (!is_int($width)) {
-            return;
-        }
         if ($width < 1) {
-            return;
+            throw new \Exception("width must be more than zero.");
         }
-        if (!$this->isColorCode($color)) {
-            return;
+        if (!is_null($color) && !$this->isColorCode($color)) {
+            throw new \Exception("specify color code in '#rrggbb' format.");
         }
         $this->frequencyPolygonWidth = $width;
-        $this->frequencyPolygonColor = $color;
+        if (!is_null($color)) {
+            $this->frequencyPolygonColor = $color;
+        }
         return $this;
     }
 
-    public function crfp($width, $color)
+    /**
+     * sets attributes of cumulative relative frequency polygon
+     * @param   int     $width  in pix
+     * @param   string  $color  in '#rrggbb' format
+     * @return  self
+     */
+    public function crfp(int $width, $color = null)
     {
-        if (!is_int($width)) {
-            return;
-        }
         if ($width < 1) {
-            return;
+            throw new \Exception("width must be more than zero.");
         }
-        if (!$this->isColorCode($color)) {
+        if (!is_null($color) && !$this->isColorCode($color)) {
             return;
         }
         $this->cumulativeRelativeFrequencyPolygonWidth = $width;
-        $this->cumulativeRelativeFrequencyPolygonColor = $color;
+        if (!is_null($color)) {
+            $this->cumulativeRelativeFrequencyPolygonColor = $color;
+        }
         return $this;
     }
 
-    public function fontPath($path)
+    /**
+     * sets the font path
+     * @param   string  $path   is the real path to the true type font path
+     * @return  self
+     */
+    public function fontPath(string $path)
     {
-        if (!is_string($path)) {
-            return;
-        }
-        if (strlen($path) < 5) {
-            return;
-        }
         if (!file_exists($path)) {
-            return;
+            throw new \Exception("file does not exist.");
         }
         $pathinfo = pathinfo($path);
         if (0 !== strcmp("ttf", strtolower($pathinfo['extension']))) {
-            return;
+            throw new \Exception("specify .ttf file path.");
         }
         $this->fontPath = $path;
         return $this;
     }
 
-    public function fontSize($size)
+    /**
+     * sets font size
+     * @param   int $size
+     * @return  self
+     */
+    public function fontSize(int $size)
     {
-        if (!is_int($size)) {
-            return;
-        }
         if ($size < 6) {
-            return;
+            throw new \Exception("size must be more than 5.");
         }
         $this->fontSize = $size;
         return $this;
     }
 
+    /**
+     * sets font color
+     * @param   string  $color  in '#rrggbb' format
+     * @return  self
+     */
     public function fontColor($color)
     {
         if (!$this->isColorCode($color)) {
-            return;
+            throw new \Exception("specify color code in '#rrggbb' format.");
         }
         $this->fontColor = $color;
         return $this;
     }
 
+    /**
+     * judges if the param is in '#rrggbb' format or not
+     * @param   mixed  $color
+     * @return  bool
+     */
     public function isColorCode($color)
     {
         if (!is_string($color)) {
@@ -265,7 +327,14 @@ class Histogram
         return preg_match('/^#[A-Fa-f0-9]{3}$|^#[A-Fa-f0-9]{6}$/', $color) ? true : false;
     }
 
-    public function getConfig($key = null)
+    /**
+     * returns config:
+     * - of the specified key
+     * - all configs if param is not specified
+     * @param   string  $key    default: null
+     * @return  mixed
+     */
+    public function getConfig(string $key = null)
     {
         if (null === $key) {
             $config = [];
@@ -280,6 +349,11 @@ class Histogram
         return null;
     }
 
+    /**
+     * returns position of horizontal axis
+     * @param
+     * @return  array
+     */
     public function getHorizontalAxisPosition()
     {
         return [
@@ -290,6 +364,11 @@ class Histogram
         ];
     }
 
+    /**
+     * returns position of vertical axis
+     * @param
+     * @return  array
+     */
     public function getVerticalAxisPosition()
     {
         return [
@@ -300,6 +379,11 @@ class Histogram
         ];
     }
 
+    /**
+     * plots axis
+     * @param
+     * @return  void
+     */
     public function plotAxis()
     {
         list($x1,$y1,$x2,$y2) = $this->getHorizontalAxisPosition();
@@ -326,6 +410,11 @@ class Histogram
         );
     }
 
+    /**
+     * plots grids
+     * @param
+     * @return  void
+     */
     public function plotGrids()
     {
         for ($i = $this->barMinValue; $i <= $this->barMaxValue; $i += $this->gridHeightPitch) {
@@ -360,6 +449,11 @@ class Histogram
         }
     }
 
+    /**
+     * plots grid values
+     * @param
+     * @return  void
+     */
     public function plotGridValues()
     {
         for ($i = $this->barMinValue; $i <= $this->barMaxValue; $i += $this->gridHeightPitch) {
@@ -380,6 +474,12 @@ class Histogram
         }
     }
 
+    /**
+     * returns position of the bar
+     * @param   int $frequency
+     * @param   int $index
+     * @return  array
+     */
     public function getBarPosition($frequency, $index)
     {
         return [
@@ -390,18 +490,23 @@ class Histogram
         ];
     }
 
+    /**
+     * plots bars
+     * @param
+     * @return  void
+     */
     public function plotBars()
     {
         if (!array_key_exists('Classes', $this->parsed)) {
-            return;
+            throw new \Exception("Classes not found.");
         }
         if (!array_key_exists('Frequencies', $this->parsed)) {
-            return;
+            throw new \Exception("Frequencies not found.");
         }
         $classes = $this->parsed['Classes'];
         $frequencies = $this->parsed['Frequencies'];
         if (empty($classes) || empty($frequencies)) {
-            return;
+            throw new \Exception("Empty classes or frequencies.");
         }
         foreach ($classes as $index => $class) {
             list($x1,$y1,$x2,$y2) = $this->getBarPosition($frequencies[$index], $index);
@@ -418,10 +523,15 @@ class Histogram
         }
     }
 
+    /**
+     * plots classes
+     * @param
+     * @return  void
+     */
     public function plotClasses()
     {
         if (!array_key_exists('Classes', $this->parsed)) {
-            return;
+            throw new \Exception("Classes not found.");
         }
         $classes = $this->parsed['Classes'];
         $x = $this->baseX;
@@ -456,17 +566,22 @@ class Histogram
         }
     }
 
+    /**
+     * plots frequency polygon
+     * @param
+     * @return  void
+     */
     public function plotFrequencyPolygon()
     {
         if (!array_key_exists('Frequencies', $this->parsed)) {
-            return;
+            throw new \Exception("Frequencies not found.");
         }
         $frequencies = $this->parsed['Frequencies'];
         if (!is_array($frequencies)) {
-            return;
+            throw new \Exception("Frequencies not found.");
         }
         if (count($frequencies) < 2) {
-            return;
+            throw new \Exception("Too few frequencies.");
         }
         for ($i = 0; $i < count($frequencies) - 1; $i++) {
             $x1 = $this->baseX + ($i + 0.5) * $this->barWidth;
@@ -486,17 +601,22 @@ class Histogram
         }
     }
 
+    /**
+     * plots cumulative relative frequency polygon
+     * @param
+     * @return  void
+     */
     public function plotCumulativeRelativeFrequencyPolygon()
     {
         if (!array_key_exists('Frequencies', $this->parsed)) {
-            return;
+            throw new \Exception("Frequencies not found.");
         }
         $frequencies = $this->parsed['Frequencies'];
         if (!is_array($frequencies)) {
-            return;
+            throw new \Exception("Frequencies not found.");
         }
         if (count($frequencies) < 2) {
-            return;
+            throw new \Exception("Too few frequencies.");
         }
         $x1 = $this->baseX;
         $y1 = $this->baseY;
@@ -521,17 +641,22 @@ class Histogram
         }
     }
 
+    /**
+     * plots frequencies
+     * @param
+     * @return  void
+     */
     public function plotFrequencies()
     {
         if (!array_key_exists('Frequencies', $this->parsed)) {
-            return;
+            throw new \Exception("Frequencies not found.");
         }
         $frequencies = $this->parsed['Frequencies'];
         if (!is_array($frequencies)) {
-            return;
+            throw new \Exception("Frequencies not found.");
         }
         if (empty($frequencies)) {
-            return;
+            throw new \Exception("Frequencies not found.");
         }
         foreach ($frequencies as $index => $frequency) {
             $x = $this->baseX + ($index + 0.5) * $this->barWidth;
@@ -551,6 +676,11 @@ class Histogram
         }
     }
 
+    /**
+     * plots label of X
+     * @param
+     * @return  self
+     */
     public function plotLabelX()
     {
         $x = (int) $this->canvasWidth / 2;
@@ -570,6 +700,11 @@ class Histogram
         return $this;
     }
 
+    /**
+     * plots label of Y
+     * @param
+     * @return  self
+     */
     public function plotLabelY()
     {
         $width = $this->canvasHeight;
@@ -594,6 +729,11 @@ class Histogram
         return $this;
     }
 
+    /**
+     * plots caption
+     * @param
+     * @return  void
+     */
     public function plotCaption()
     {
         $x = $this->canvasWidth / 2;
@@ -612,6 +752,11 @@ class Histogram
         );
     }
 
+    /**
+     * sets properties
+     * @param
+     * @return  void
+     */
     private function setProperties()
     {
         $this->parsed = $this->ft->parse();
@@ -628,88 +773,136 @@ class Histogram
         $this->image = Image::canvas($this->canvasWidth, $this->canvasHeight, $this->canvasBackgroundColor);
     }
 
-    public function labelX($label)
+    /**
+     * sets label of X
+     * @param   string  $label
+     * @return  self
+     */
+    public function labelX(string $label)
     {
-        if (!is_string($label)) {
-            return;
-        }
         $this->labelX = $label;
         return $this;
     }
 
-    public function labelY($label)
+    /**
+     * sets label of Y
+     * @param   string  $label
+     * @return  self
+     */
+    public function labelY(string $label)
     {
-        if (!is_string($label)) {
-            return;
-        }
         $this->labelY = $label;
         return $this;
     }
 
-    public function caption($caption)
+    /**
+     * sets caption
+     * @param   string  $caption
+     * @return  self
+     */
+    public function caption(string $caption)
     {
-        if (!is_string($caption)) {
-            return;
-        }
         $this->caption = $caption;
         return $this;
     }
 
+    /**
+     * sets bar-visibility on
+     * @param
+     * @return  self
+     */
     public function barOn()
     {
         $this->showBar = true;
         return $this;
     }
 
+    /**
+     * sets var-visibility off
+     * @param
+     * @return  self
+     */
     public function barOff()
     {
         $this->showBar = false;
         return $this;
     }
 
+    /**
+     * sets frequency-polygon-visibility on
+     * @param
+     * @return  self
+     */
     public function fpOn()
     {
         $this->showFrequencyPolygon = true;
         return $this;
     }
 
+    /**
+     * sets frequency-polygon-visibility off
+     * @param
+     * @return  self
+     */
     public function fpOff()
     {
         $this->showFrequencyPolygon = false;
         return $this;
     }
 
+    /**
+     * sets cumulative-relative-frequency-polygon-visibility on
+     * @param
+     * @return  self
+     */
     public function crfpOn()
     {
         $this->showCumulativeRelativeFrequencyPolygon = true;
         return $this;
     }
 
+    /**
+     * sets cumulative-relative-frequency-polygon-visibility off
+     * @param
+     * @return  self
+     */
     public function crfpOff()
     {
         $this->showCumulativeRelativeFrequencyPolygon = false;
         return $this;
     }
 
+    /**
+     * sets frequency-visibility on
+     * @param
+     * @return  self
+     */
     public function frequencyOn()
     {
         $this->showFrequency = true;
         return $this;
     }
 
+    /**
+     * sets frequency-visibility off
+     * @param
+     * @return  self
+     */
     public function frequencyOff()
     {
         $this->showFrequency = false;
         return $this;
     }
 
-    public function create($filePath)
+    /**
+     * creates a histogram image
+     * @param   string  $filePath
+     * @return  self
+     */
+    public function create(string $filePath)
     {
-        if (!is_string($filePath)) {
-            return;
-        }
-        if (strlen($filePath) == 0) {
-            return;
+        if (strlen($filePath) === 0) {
+            throw new \Exception("specify a file path to save image.");
         }
         $this->setProperties();
         $this->plotGrids();

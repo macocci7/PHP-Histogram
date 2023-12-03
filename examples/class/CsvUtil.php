@@ -8,10 +8,20 @@ namespace Macocci7;
 
 class CsvUtil
 {
+    /**
+     * constructor
+     */
     public function __construct()
     {
     }
 
+    /**
+     * returns hash array grouped by $keyColumn
+     * @param   array   $csv
+     * @param   string  $keyColumn
+     * @param   string  $valueColumn
+     * @return  array
+     */
     public function groupBy($csv, $keyColumn, $valueColumn)
     {
         // CSV MUST INCLUDES COLUMN NAMES IN HEAD LINE
@@ -34,6 +44,11 @@ class CsvUtil
         return $groupBy;
     }
 
+    /**
+     * converts strings in array to integer values
+     * @param   array   $strings
+     * @return  array
+     */
     public function convertString2IntegerInArray($strings)
     {
         if (!is_array($strings)) {
@@ -51,13 +66,15 @@ class CsvUtil
         return $integers;
     }
 
-    public function getDailyData($csvFileName)
+    /**
+     * returns daily data
+     * @param   string  $csvFileName
+     * @return  array
+     */
+    public function getDailyData(string $csvFileName)
     {
-        if (!is_string($csvFileName)) {
-            return;
-        }
         if (!file_exists($csvFileName)) {
-            echo "CsvUtil::getDailyData(): '" . $csvFileName . "' does not exist.\n";
+            throw new \Exception("CsvUtil::getDailyData(): '" . $csvFileName . "' does not exist.\n");
         }
         $csv = array_map('str_getcsv', file($csvFileName));
         $groupBy = $this->groupBy($csv, "game_date", "release_speed");
