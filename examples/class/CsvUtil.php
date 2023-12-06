@@ -1,4 +1,5 @@
 <?php
+
 namespace Macocci7;
 
 /**
@@ -7,51 +8,79 @@ namespace Macocci7;
 
 class CsvUtil
 {
-
+    /**
+     * constructor
+     */
     public function __construct()
     {
-        //
     }
 
-    public function groupBy($csv, $keyColumn, $valueColumn) {
+    /**
+     * returns hash array grouped by $keyColumn
+     * @param   array   $csv
+     * @param   string  $keyColumn
+     * @param   string  $valueColumn
+     * @return  array
+     */
+    public function groupBy($csv, $keyColumn, $valueColumn)
+    {
         // CSV MUST INCLUDES COLUMN NAMES IN HEAD LINE
         $data = [...$csv];
         $head = array_shift($data);
         $indexKeyColumn = array_search($keyColumn, $head);
         $indexValueColumn = array_search($valueColumn, $head);
-        if (!$indexKeyColumn || !$indexValueColumn) return;
+        if (!$indexKeyColumn || !$indexValueColumn) {
+            return;
+        }
         $groupBy = [];
-        foreach($data as $index => $row) {
-            if (null == $row[$indexValueColumn]) continue;
+        foreach ($data as $index => $row) {
+            if (null == $row[$indexValueColumn]) {
+                continue;
+            }
             $key = $row[$indexKeyColumn];
             $groupBy[$key][] = $row[$indexValueColumn];
         }
         ksort($groupBy);
         return $groupBy;
     }
-    
-    public function convertString2IntegerInArray($strings) {
-        if (!is_array($strings)) return;
-        foreach($strings as $value) {
-            if (!(is_numeric($value)||''===$value)) return;
+
+    /**
+     * converts strings in array to integer values
+     * @param   array   $strings
+     * @return  array
+     */
+    public function convertString2IntegerInArray($strings)
+    {
+        if (!is_array($strings)) {
+            return;
+        }
+        foreach ($strings as $value) {
+            if (!(is_numeric($value) || '' === $value)) {
+                return;
+            }
         }
         $integers = [];
-        foreach($strings as $key => $value) {
+        foreach ($strings as $key => $value) {
             $integers[$key] = (int) $value;
         }
         return $integers;
     }
 
-    public function  getDailyData($csvFileName) {
-        if (!is_string($csvFileName)) return;
+    /**
+     * returns daily data
+     * @param   string  $csvFileName
+     * @return  array
+     */
+    public function getDailyData(string $csvFileName)
+    {
         if (!file_exists($csvFileName)) {
-            echo "CsvUtil::getDailyData(): '".$csvFileName."' does not exist.\n";
+            throw new \Exception("CsvUtil::getDailyData(): '" . $csvFileName . "' does not exist.\n");
         }
         $csv = array_map('str_getcsv', file($csvFileName));
         $groupBy = $this->groupBy($csv, "game_date", "release_speed");
-        foreach($groupBy as $index => $row) {
+        foreach ($groupBy as $index => $row) {
             $groupBy[$index] = $this->convertString2IntegerInArray($row);
         }
         return $groupBy;
-    }   
+    }
 }

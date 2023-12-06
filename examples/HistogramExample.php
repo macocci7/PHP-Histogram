@@ -1,4 +1,5 @@
 <?php
+
 require('../vendor/autoload.php');
 
 use Macocci7\PhpHistogram\Histogram;

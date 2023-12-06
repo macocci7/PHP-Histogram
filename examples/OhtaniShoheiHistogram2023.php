@@ -19,13 +19,13 @@ echo "## Pitcher:\n\n";
 echo "[Ohtani Shohei](https://www.mlb.com/player/shohei-ohtani-660271)\n\n";
 echo "## Data Source\n\n[savant](https://baseballsavant.mlb.com/)\n\n";
 echo "## Dates\n\n";
-foreach(array_keys($dailyData) as $key) {
+foreach (array_keys($dailyData) as $key) {
     echo "- [" . $key . "](#" . $key . ")\n";
 }
 foreach ($dailyData as $key => $data) {
     echo "\n## " . $key . "\n\n";
     $hg->ft->setData($data);
-    $histogramPath = 'img/HistogramOhtaniShohei'.$key.'.png';
+    $histogramPath = 'img/HistogramOhtaniShohei' . $key . '.png';
     $hg->create($histogramPath, ['bar' => true, 'frequency' => true]);
     echo "<details><summary>Properties</summary>\n\n";
     echo "|Property|Value|\n";
@@ -35,7 +35,7 @@ foreach ($dailyData as $key => $data) {
     echo "|Min|" . $hg->ft->getMin($data) . "|\n";
     echo "|DataRange|" . $hg->ft->getDataRange($data) . "|\n";
     echo "|Mode|" . $hg->ft->getMode() . "|\n";
-    echo "|Mean|" . number_format($hg->ft->getMean(),1,'.',',') . "|\n";
+    echo "|Mean|" . number_format($hg->ft->getMean(), 1, '.', ',') . "|\n";
     echo "|Median|" . $hg->ft->getMedian($data) . "|\n";
     echo "|FirstQuartile|" . $hg->ft->getFirstQuartile($data) . "|\n";
     echo "|ThirdQuartile|" . $hg->ft->getThirdQuartile($data) . "|\n";
@@ -46,6 +46,6 @@ foreach ($dailyData as $key => $data) {
     $hg->ft->show();
     echo "</details>\n\n";
     echo "\n\n";
-    echo "![Histogram:".$key."](".$histogramPath.")";
+    echo "![Histogram:" . $key . "](" . $histogramPath . ")";
     echo "\n\n";
 }

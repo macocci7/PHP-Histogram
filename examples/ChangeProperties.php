@@ -1,4 +1,5 @@
 <?php
+
 require('../vendor/autoload.php');
 
 use Macocci7\PhpHistogram\Histogram;
@@ -6,7 +7,7 @@ use Macocci7\PhpHistogram\Histogram;
 $hg = new Histogram();
 $hg->ft->setClassRange(5);
 $hg->ft->setData([1, 5, 6, 10, 12, 14, 15, 16, 17, 18, 20, 24, 25]);
-$hg->resize(600,400)
+$hg->resize(600, 400)
    ->frame(0.6, 0.6)
    ->bgcolor('#3333cc')
    ->axis(3, '#ffffff')
