@@ -3,7 +3,9 @@
 namespace Macocci7;
 
 /**
- * Note: This code is written only for use in 'OutlierDetection.php'.
+ * class for csv operation
+ * @author  macocci7 <macocci7@yahoo.co.jp>
+ * @license MIT
  */
 
 class CsvUtil
@@ -17,10 +19,10 @@ class CsvUtil
 
     /**
      * returns hash array grouped by $keyColumn
-     * @param   array   $csv
-     * @param   string  $keyColumn
-     * @param   string  $valueColumn
-     * @return  array
+     * @param   list<string[]>  $csv
+     * @param   string          $keyColumn
+     * @param   string          $valueColumn
+     * @return  array<string, list<string, string>>|null
      */
     public function groupBy($csv, $keyColumn, $valueColumn)
     {
@@ -30,10 +32,10 @@ class CsvUtil
         $indexKeyColumn = array_search($keyColumn, $head);
         $indexValueColumn = array_search($valueColumn, $head);
         if (!$indexKeyColumn || !$indexValueColumn) {
-            return;
+            return null;
         }
         $groupBy = [];
-        foreach ($data as $index => $row) {
+        foreach ($data as $row) {
             if (null == $row[$indexValueColumn]) {
                 continue;
             }
@@ -46,17 +48,14 @@ class CsvUtil
 
     /**
      * converts strings in array to integer values
-     * @param   array   $strings
-     * @return  array
+     * @param   string[]   $strings
+     * @return  int[]|null
      */
-    public function convertString2IntegerInArray($strings)
+    public function convertString2IntegerInArray(array $strings)
     {
-        if (!is_array($strings)) {
-            return;
-        }
         foreach ($strings as $value) {
             if (!(is_numeric($value) || '' === $value)) {
-                return;
+                return null;
             }
         }
         $integers = [];
@@ -69,7 +68,8 @@ class CsvUtil
     /**
      * returns daily data
      * @param   string  $csvFileName
-     * @return  array
+     * @return  array<string, int[]>
+     * @thrown  \Exception
      */
     public function getDailyData(string $csvFileName)
     {

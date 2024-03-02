@@ -43,7 +43,7 @@ foreach ($dailyData as $key => $data) {
     echo "|QuartileDeviation|" . $hg->ft->getQuartileDeviation($data) . "|\n";
     echo "</details>\n\n";
     echo "<details><summary>Frequency Table</summary>\n\n";
-    $hg->ft->show();
+    echo $hg->ft->meanOn()->markdown();
     echo "</details>\n\n";
     echo "\n\n";
     echo "![Histogram:" . $key . "](" . $histogramPath . ")";

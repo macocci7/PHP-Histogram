@@ -85,7 +85,7 @@ foreach ($population as $key => $value) {
 echo "</details>\n\n<br />\n\n";
 
 echo "<details><summary>Frequency Table</summary>\n\n";
-$hg->ft->meanOn()->show();
+echo $hg->ft->meanOn()->markdown();
 echo "\n\n</details>\n\n\n";
 
 echo "## Histogram\n\n";

@@ -8,7 +8,9 @@ use Macocci7\CsvUtil;
 
 $hg = new Histogram(600, 500);
 $hg->ft->setClassRange(10);
-$hg->ft->setData([0, 5, 10, 15, 20, 22, 24, 26, 28, 30, 33, 36, 39, 40, 45, 50]);
+$hg->ft->setData(
+    [ 0, 5, 10, 15, 20, 22, 24, 26, 28, 30, 33, 36, 39, 40, 45, 50, ]
+);
 
 // CASE:01
 // bar:on

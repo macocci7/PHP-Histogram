@@ -1,0 +1,75 @@
+#imageDriver: 'gd'
+imageDriver: 'imagick'
+
+# Default Properties
+canvasBackgroundColor: '#ffffff'
+frameXRatio: 0.8
+frameYRatio: 0.7
+axisColor: '#666666'
+axisWidth: 2
+gridColor: '#333333'
+gridWidth: 1
+gridHeightPitch: 1
+barBackgroundColor: '#0000ff'
+barBorderColor: '#9999ff'
+barBorderWidth: 1
+frequencyPolygonColor: '#ff0000'
+frequencyPolygonWidth: 2
+cumulativeRelativeFrequencyPolygonColor: '#33ff66'
+cumulativeRelativeFrequencyPolygonWidth: 2
+fontPath: 'fonts/ipaexg.ttf'
+fontSize: 16
+fontColor: '#333333'
+showBar: true
+showFrequencyPolygon: false
+showCumulativeRelativeFrequencyPolygon: false
+showFrequency: false
+validConfig:
+    canvasWidth:
+        type: int
+    canvasHeight:
+        type: int
+    canvasBackgroundColor:
+        type: colorCode
+    frameXRatio:
+        type: float
+    frameYRatio:
+        type: float
+    axisColor:
+        type: colorCode
+    axisWidth:
+        type: int
+    gridColor:
+        type: colorCode
+    gridWidth:
+        type: int
+    gridHeightPitch:
+        type: int
+    barBackgroundColor:
+        type: colorCode
+    barBorderColor:
+        type: colorCode
+    barBorderWidth:
+        type: int
+    frequencyPolygonColor:
+        type: colorCode
+    frequencyPolygonWidth:
+        type: int
+    cumulativeRelativeFrequencyPolygonColor:
+        type: colorCode
+    cumulativeRelativeFrequencyPolygonWidth:
+        type: int
+    fontPath:
+        type: string
+    fontSize:
+        type: int
+    fontColor:
+        type: colorCode
+    showBar:
+        type: bool
+    showFrequencyPolygon:
+        type: bool
+    showCumulativeRelativeFrequencyPolygon:
+        type: bool
+    showFrequency:
+        type: bool
