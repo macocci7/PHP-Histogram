@@ -163,6 +163,20 @@ final class ConfigTest extends TestCase
             [ 'input' => '#000000', 'def' => 'colorCode', 'expect' => true, ],
             [ 'input' => '#0f0f0f', 'def' => 'colorCode', 'expect' => true, ],
             [ 'input' => '#0f0f0g', 'def' => 'colorCode', 'expect' => false, ],
+            [ 'input' => 1, 'def' => 'int|null', 'expect' => true, ],
+            [ 'input' => true, 'def' => 'int|null', 'expect' => false, ],
+            [ 'input' => false, 'def' => 'int|null', 'expect' => false, ],
+            [ 'input' => null, 'def' => 'int|null', 'expect' => true, ],
+            [ 'input' => 1.5, 'def' => 'int|null', 'expect' => false, ],
+            [ 'input' => '1', 'def' => 'int|null', 'expect' => false, ],
+            [ 'input' => [], 'def' => 'int|null', 'expect' => false, ],
+            [ 'input' => true, 'def' => 'int|null|string', 'expect' => false, ],
+            [ 'input' => false, 'def' => 'int|null|string', 'expect' => false, ],
+            [ 'input' => 1, 'def' => 'int|null|string', 'expect' => true, ],
+            [ 'input' => 1.5, 'def' => 'int|null|string', 'expect' => false, ],
+            [ 'input' => [], 'def' => 'int|null|string', 'expect' => false, ],
+            [ 'input' => null, 'def' => 'int|null|string', 'expect' => true, ],
+            [ 'input' => 'hoge', 'def' => 'int|null|string', 'expect' => true, ],
         ];
     }
 

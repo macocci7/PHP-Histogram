@@ -3,6 +3,7 @@
 namespace Macocci7\PhpHistogram;
 
 use Macocci7\PhpHistogram\Helpers\Config;
+use Macocci7\PhpHistogram\Traits\JudgeTrait;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Interfaces\ImageInterface;
 use Macocci7\PhpFrequencyTable\FrequencyTable;
@@ -20,32 +21,34 @@ use Intervention\Image\Geometry\Factories\RectangleFactory;
  */
 class Plotter
 {
+    use JudgeTrait;
+
     public FrequencyTable $ft;
     protected string $imageDriver;
     protected ImageManager $imageManager;
     protected ImageInterface $image;
     protected int $canvasWidth;
     protected int $canvasHeight;
-    protected string $canvasBackgroundColor;
+    protected string|null $canvasBackgroundColor;
     protected float $frameXRatio;
     protected float $frameYRatio;
-    protected string $axisColor;
+    protected string|null $axisColor;
     protected int $axisWidth;
-    protected string $gridColor;
+    protected string|null $gridColor;
     protected int $gridWidth;
     protected int|float $gridHeightPitch;
     protected int $barWidth;
     protected int|float $barHeightPitch;
-    protected string $barBackgroundColor;
-    protected string $barBorderColor;
+    protected string|null $barBackgroundColor;
+    protected string|null $barBorderColor;
     protected int $barBorderWidth;
-    protected string $frequencyPolygonColor;
+    protected string|null $frequencyPolygonColor;
     protected int $frequencyPolygonWidth;
-    protected string $cumulativeRelativeFrequencyPolygonColor;
+    protected string|null $cumulativeRelativeFrequencyPolygonColor;
     protected int $cumulativeRelativeFrequencyPolygonWidth;
     protected string $fontPath;
     protected int $fontSize;
-    protected string $fontColor;
+    protected string|null $fontColor;
     protected int $barMaxValue;
     protected int $barMinValue;
     protected int $baseX;
@@ -55,12 +58,15 @@ class Plotter
      */
     protected array $parsed = [];
     protected bool $showBar;
+    protected bool $showGrid;
+    protected bool $showGridValues;
+    protected bool $showAxis;
     protected bool $showFrequencyPolygon;
     protected bool $showCumulativeRelativeFrequencyPolygon;
     protected bool $showFrequency;
-    protected string $labelX = '';
-    protected string $labelY = '';
-    protected string $caption = '';
+    protected string $labelX;
+    protected string $labelY;
+    protected string $caption;
     /**
      * @var array<string, array<string, string>>    $validConfig
      */
@@ -104,9 +110,15 @@ class Plotter
             'fontSize',
             'fontColor',
             'showBar',
+            'showGrid',
+            'showGridValues',
+            'showAxis',
             'showFrequencyPolygon',
             'showCumulativeRelativeFrequencyPolygon',
             'showFrequency',
+            'labelX',
+            'labelY',
+            'caption',
             'validConfig',
         ];
         foreach ($props as $prop) {
@@ -131,7 +143,7 @@ class Plotter
             $this->gridHeightPitch = (int) (0.2 * $this->barMaxValue);
         }
         $this->image = $this->imageManager->create($this->canvasWidth, $this->canvasHeight);
-        if (isset($this->canvasBackgroundColor)) {
+        if ($this->isColorCode($this->canvasBackgroundColor)) {
             $this->image = $this->image->fill($this->canvasBackgroundColor);
         }
     }
@@ -170,6 +182,9 @@ class Plotter
      */
     public function plotAxis()
     {
+        if (!$this->showAxis) {
+            return $this;
+        }
         list($x1, $y1, $x2, $y2) = $this->getHorizontalAxisPosition();
         $this->image->drawLine(
             function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
@@ -197,6 +212,9 @@ class Plotter
      */
     public function plotGrids()
     {
+        if (!$this->showGrid) {
+            return $this;
+        }
         for ($i = $this->barMinValue; $i <= $this->barMaxValue; $i += $this->gridHeightPitch) {
             $x1 = $this->baseX;
             $y1 = $this->baseY - $i * $this->barHeightPitch;
@@ -232,6 +250,9 @@ class Plotter
      */
     public function plotGridValues()
     {
+        if (!$this->showGridValues) {
+            return $this;
+        }
         for ($i = $this->barMinValue; $i <= $this->barMaxValue; $i += $this->gridHeightPitch) {
             $x = (int) ($this->baseX - $this->fontSize * 1.1);
             $y = (int) ($this->baseY - $i * $this->barHeightPitch + $this->fontSize * 0.4);
@@ -275,6 +296,9 @@ class Plotter
      */
     public function plotBars()
     {
+        if (!$this->showBar) {
+            return $this;
+        }
         if (!array_key_exists('Classes', $this->parsed)) {
             throw new \Exception("Classes not found.");
         }
@@ -352,6 +376,9 @@ class Plotter
      */
     public function plotFrequencyPolygon()
     {
+        if (!$this->showFrequencyPolygon) {
+            return $this;
+        }
         if (!array_key_exists('Frequencies', $this->parsed)) {
             throw new \Exception("Frequencies not found.");
         }
@@ -388,6 +415,9 @@ class Plotter
      */
     public function plotCumulativeRelativeFrequencyPolygon()
     {
+        if (!$this->showCumulativeRelativeFrequencyPolygon) {
+            return $this;
+        }
         if (!array_key_exists('Frequencies', $this->parsed)) {
             throw new \Exception("Frequencies not found.");
         }
@@ -427,6 +457,9 @@ class Plotter
      */
     public function plotFrequencies()
     {
+        if (!$this->showFrequency) {
+            return $this;
+        }
         if (!array_key_exists('Frequencies', $this->parsed)) {
             throw new \Exception("Frequencies not found.");
         }
@@ -462,6 +495,9 @@ class Plotter
      */
     public function plotLabelX()
     {
+        if (!$this->labelX) {
+            return $this;
+        }
         $x = (int) $this->canvasWidth / 2;
         $y = (int) ($this->baseY + (1 - $this->frameYRatio) * $this->canvasHeight / 3);
         $this->image->text(
@@ -485,12 +521,13 @@ class Plotter
      */
     public function plotLabelY()
     {
+        if (!$this->labelY) {
+            return $this;
+        }
         $width = $this->canvasHeight;
         $height = (int) ($this->canvasWidth * (1 - $this->frameXRatio) / 3);
+        // background-color: tranceparent
         $image = $this->imageManager->create($width, $height);
-        if (isset($this->canvasBackgroundColor)) {
-            $image = $image->fill($this->canvasBackgroundColor);
-        }
         $x = $width / 2;
         $y = ($height + $this->fontSize) / 2;
         $image->text(
@@ -516,6 +553,9 @@ class Plotter
      */
     public function plotCaption()
     {
+        if (!$this->caption) {
+            return $this;
+        }
         $x = (int) ($this->canvasWidth / 2);
         $y = (int) ($this->canvasHeight * (1 - $this->frameYRatio) / 3);
         $this->image->text(
@@ -548,29 +588,15 @@ class Plotter
         $this->setProperties();
         $this->plotGrids();
         $this->plotGridValues();
-        if ($this->showBar) {
-            $this->plotBars();
-        }
+        $this->plotBars();
         $this->plotAxis();
-        if ($this->showFrequencyPolygon) {
-            $this->plotFrequencyPolygon();
-        }
-        if ($this->showCumulativeRelativeFrequencyPolygon) {
-            $this->plotCumulativeRelativeFrequencyPolygon();
-        }
+        $this->plotFrequencyPolygon();
+        $this->plotCumulativeRelativeFrequencyPolygon();
         $this->plotClasses();
-        if ($this->showFrequency) {
-            $this->plotFrequencies();
-        }
-        if ($this->labelX) {
-            $this->plotLabelX();
-        }
-        if ($this->labelY) {
-            $this->plotLabelY();
-        }
-        if ($this->caption) {
-            $this->plotCaption();
-        }
+        $this->plotFrequencies();
+        $this->plotLabelX();
+        $this->plotLabelY();
+        $this->plotCaption();
         $this->image->save($filePath);
         return $this;
     }

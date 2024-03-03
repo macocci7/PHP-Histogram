@@ -40,9 +40,15 @@ final class HistogramTest extends TestCase
         'fontSize',
         'fontColor',
         'showBar',
+        'showGrid',
+        'showGridValues',
+        'showAxis',
         'showFrequencyPolygon',
         'showCumulativeRelativeFrequencyPolygon',
         'showFrequency',
+        'labelX',
+        'labelY',
+        'caption',
     ];
 
     public static function provide_size_can_return_size_correctly(): array
@@ -695,5 +701,89 @@ final class HistogramTest extends TestCase
         foreach ($this->validConfig as $key) {
             $this->assertSame($config[$key], $hg->getConfig($key));
         }
+    }
+
+    public static function provide_setClassRange_can_throw_exception_with_invalid_param(): array
+    {
+        return [
+            [ 'classRange' => -1, ],
+            [ 'classRange' => 0, ],
+            [ 'classRange' => -1.5, ],
+            [ 'classRange' => 0.0, ],
+        ];
+    }
+
+    /**
+     * @dataProvider provide_setClassRange_can_throw_exception_with_invalid_param
+     */
+    public function test_setClassRange_can_throw_exception_with_invalid_param(int|float $classRange): void
+    {
+        $hg = new Histogram();
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("Class range must be a positive number.");
+        $hg->setClassRange($classRange);
+    }
+
+    public static function provide_setClassRange_can_set_class_range_correctly(): array
+    {
+        return [
+            [ 'classRange' => 0.01, ],
+            [ 'classRange' => 0.1, ],
+            [ 'classRange' => 1.0, ],
+            [ 'classRange' => 1, ],
+            [ 'classRange' => 1.5, ],
+            [ 'classRange' => 2, ],
+        ];
+    }
+
+    /**
+     * @dataProvider provide_setClassRange_can_set_class_range_correctly
+     */
+    public function test_setClassRange_can_set_class_range_correctly(int|float $classRange): void
+    {
+        $hg = new Histogram();
+        $this->assertSame($classRange, $hg->setClassRange($classRange)->ft->getClassRange());
+    }
+
+    public static function provide_setData_can_throw_exception_with_invalid_param(): array
+    {
+        return [
+            [ 'data' => [], ],
+            [ 'data' => [null], ],
+            [ 'data' => [true], ],
+            [ 'data' => [false], ],
+            [ 'data' => [''], ],
+            [ 'data' => [[]], ],
+            [ 'data' => [ 1, '2', ], ],
+        ];
+    }
+
+    /**
+     * @dataProvider provide_setData_can_throw_exception_with_invalid_param
+     */
+    public function test_setData_can_throw_exception_with_invalid_param(array $data): void
+    {
+        $hg = new Histogram();
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("Invalid data. Expected: array<int|string, int|float>");
+        $hg->setData($data);
+    }
+
+    public static function provide_setData_can_set_data_correctly(): array
+    {
+        return [
+            [ 'data' => [0], ],
+            [ 'data' => [ -1, -2, -3, ], ],
+            [ 'data' => [ 5, 4, 3, ], ],
+        ];
+    }
+
+    /**
+     * @dataProvider provide_setData_can_set_data_correctly
+     */
+    public function test_setData_can_set_data_correctly(array $data): void
+    {
+        $hg = new Histogram();
+        $this->assertSame($data, $hg->setData($data)->ft->getData());
     }
 }

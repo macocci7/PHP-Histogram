@@ -21,42 +21,48 @@ fontPath: 'fonts/ipaexg.ttf'
 fontSize: 16
 fontColor: '#333333'
 showBar: true
+showGrid: true
+showGridValues: true
+showAxis: true
 showFrequencyPolygon: false
 showCumulativeRelativeFrequencyPolygon: false
 showFrequency: false
+labelX: ''
+labelY: ''
+caption: ''
 validConfig:
     canvasWidth:
         type: int
     canvasHeight:
         type: int
     canvasBackgroundColor:
-        type: colorCode
+        type: colorCode|null
     frameXRatio:
         type: float
     frameYRatio:
         type: float
     axisColor:
-        type: colorCode
+        type: colorCode|null
     axisWidth:
         type: int
     gridColor:
-        type: colorCode
+        type: colorCode|null
     gridWidth:
         type: int
     gridHeightPitch:
         type: int
     barBackgroundColor:
-        type: colorCode
+        type: colorCode|null
     barBorderColor:
-        type: colorCode
+        type: colorCode|null
     barBorderWidth:
         type: int
     frequencyPolygonColor:
-        type: colorCode
+        type: colorCode|null
     frequencyPolygonWidth:
         type: int
     cumulativeRelativeFrequencyPolygonColor:
-        type: colorCode
+        type: colorCode|null
     cumulativeRelativeFrequencyPolygonWidth:
         type: int
     fontPath:
@@ -64,8 +70,14 @@ validConfig:
     fontSize:
         type: int
     fontColor:
-        type: colorCode
+        type: colorCode|null
     showBar:
+        type: bool
+    showGrid:
+        type: bool
+    showGridValues:
+        type: bool
+    showAxis:
         type: bool
     showFrequencyPolygon:
         type: bool
@@ -73,3 +85,9 @@ validConfig:
         type: bool
     showFrequency:
         type: bool
+    labelX:
+        type: string
+    labelY:
+        type: string
+    caption:
+        type: string

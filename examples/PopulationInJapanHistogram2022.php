@@ -58,10 +58,6 @@ $classRange = 1000000;  // 1 million
 $histogramPath = 'img/HistogramPopulationInJapan2022.png';
 
 $hg = new Histogram(1024, 768);
-$hg->frame(0.9, 0.7)
-   ->fontSize(10);
-$hg->ft->setClassRange($classRange);
-$hg->ft->setData($population);
 $hg->ft->setColumns2Show([ // Only specified columns will be shown.
     'Class',
     'Frequency',
@@ -71,7 +67,13 @@ $hg->ft->setColumns2Show([ // Only specified columns will be shown.
     'ClassValue',
     'ClassValue * Frequency',
 ]);
-$hg->frequencyOn()->create($histogramPath);
+$hg->frame(0.9, 0.7)
+   ->fontSize(10)
+   ->setClassRange($classRange)
+   ->setData($population)
+   ->frequencyOn()
+   ->caption('Population in Japan 2022')
+   ->create($histogramPath);
 
 echo "# Population in Japan, in 2022\n";
 

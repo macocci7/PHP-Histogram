@@ -83,26 +83,25 @@ class Config
     /**
      * judges if $input is valid or not
      * @param   mixed   $input
-     * @param   string  $def
+     * @param   string  $defs
      * @return  bool
      */
-    public static function isValid(mixed $input, string $def)
+    public static function isValid(mixed $input, string $defs)
     {
-        if (strcmp('int', $def) === 0) {
-            return is_int($input);
-        } elseif (strcmp('float', $def) === 0) {
-            return is_float($input);
-        } elseif (strcmp('string', $def) === 0) {
-            return is_string($input);
-        } elseif (strcmp('bool', $def) === 0) {
-            return is_bool($input);
-        } elseif (strcmp('array', $def) === 0) {
-            return is_array($input);
-        } elseif (strcmp('number', $def) === 0) {
-            return self::isNumber($input);
-        } elseif (strcmp('colorCode', $def) === 0) {
-            return self::isColorCode($input);
+        $r = false;
+        foreach (explode('|', $defs) as $def) {
+            $r = $r || match ($def) {
+                'int' => is_int($input),
+                'float' => is_float($input),
+                'string' => is_string($input),
+                'bool' => is_bool($input),
+                'array' => is_array($input),
+                'null' => is_null($input),
+                'number' => self::isNumber($input),
+                'colorCode' => self::isColorCode($input),
+                default => false,
+            };
         }
-        return false;
+        return $r;
     }
 }

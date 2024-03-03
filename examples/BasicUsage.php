@@ -1,0 +1,10 @@
+<?php
+
+require('../vendor/autoload.php');
+
+use Macocci7\PhpHistogram\Histogram;
+
+$hg = new Histogram();
+$hg->setClassRange(5)
+   ->setData([ 0, 5, 8, 10, 12, 13, 15, 16, 17, 18, 19, 20, 24, ])
+   ->create('img/HistogramBasicUsage.png');

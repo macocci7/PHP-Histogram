@@ -99,7 +99,7 @@ class Histogram extends Plotter
     {
         $conf = [];
         foreach ($this->validConfig as $key => $def) {
-            if (isset($content[$key])) {
+            if (array_key_exists($key, $content)) {
                 if (Config::isValid($content[$key], $def['type'])) {
                     $conf[$key] = $content[$key];
                 } else {
@@ -131,6 +131,36 @@ class Histogram extends Plotter
             return $this->{$key};
         }
         return null;
+    }
+
+    /**
+     * sets class range
+     * @param   int|float   $classRange
+     * @return  self
+     * @thrown  \Exception
+     */
+    public function setClassRange(int|float $classRange)
+    {
+        if ($classRange <= 0) {
+            throw new \Exception("Class range must be a positive number.");
+        }
+        $this->ft->setClassRange($classRange);
+        return $this;
+    }
+
+    /**
+     * sets data
+     * @param   array<int|string, int|float>    $data
+     * @return  self
+     * @thrown  \Exception
+     */
+    public function setData(array $data)
+    {
+        if (!$this->ft->isSettableData($data)) {
+            throw new \Exception("Invalid data. Expected: array<int|string, int|float>");
+        }
+        $this->ft->setData($data);
+        return $this;
     }
 
     /**

@@ -20,7 +20,8 @@
         "macocci7/php-frequency-table": "^1.2",
         "intervention/image": "^3.4",
         "phploc/phploc": "^7.0",
-        "nette/neon": "^3.4"
+        "nette/neon": "^3.4",
+        "fakerphp/faker": "^1.23"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.7",

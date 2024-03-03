@@ -6,7 +6,7 @@ require('./class/CsvUtil.php');
 use Macocci7\PhpHistogram\Histogram;
 use Macocci7\CsvUtil;
 
-$hg = new Histogram(600, 500);
+$hg = new Histogram(360, 240);
 $hg->ft->setClassRange(10);
 $hg->ft->setData(
     [ 0, 5, 10, 15, 20, 22, 24, 26, 28, 30, 33, 36, 39, 40, 45, 50, ]
@@ -17,7 +17,9 @@ $hg->ft->setData(
 // frequencyPolygon:off
 // cumulativeRelativeFrequencyPolygon:off
 // frequency:off
-$hg->create('img/HistogramExample01.png');
+$hg
+   ->caption('CASE01')
+   ->create('img/HistogramExample01.png');
 
 // CASE:02
 // bar:on
@@ -29,6 +31,7 @@ $hg
    ->fpOn()
    ->crfpOff()
    ->frequencyOff()
+   ->caption('CASE02')
    ->create('img/HistogramExample02.png');
 
 // CASE:03
@@ -41,6 +44,7 @@ $hg
    ->fpOff()
    ->crfpOn()
    ->frequencyOff()
+   ->caption('CASE03')
    ->create('img/HistogramExample03.png');
 
 // CASE:04
@@ -53,6 +57,7 @@ $hg
    ->fpOff()
    ->crfpOff()
    ->frequencyOn()
+   ->caption('CASE04')
    ->create('img/HistogramExample04.png');
 
 // CASE:05
@@ -65,6 +70,7 @@ $hg
    ->fpOff()
    ->crfpOn()
    ->frequencyOn()
+   ->caption('CASE05')
    ->create('img/HistogramExample05.png');
 
 // CASE:06
@@ -77,6 +83,7 @@ $hg
    ->fpOn()
    ->crfpOn()
    ->frequencyOff()
+   ->caption('CASE06')
    ->create('img/HistogramExample06.png');
 
 // CASE:07
@@ -89,6 +96,7 @@ $hg
    ->fpOn()
    ->crfpOff()
    ->frequencyOn()
+   ->caption('CASE07')
    ->create('img/HistogramExample07.png');
 
 // CASE:08
@@ -101,6 +109,7 @@ $hg
    ->fpOn()
    ->crfpOn()
    ->frequencyOn()
+   ->caption('CASE08')
    ->create('img/HistogramExample08.png');
 
 // CASE:09
@@ -113,6 +122,7 @@ $hg
    ->fpOff()
    ->crfpOff()
    ->frequencyOff()
+   ->caption('CASE09')
    ->create('img/HistogramExample09.png');
 
 // CASE:10
@@ -125,6 +135,7 @@ $hg
    ->fpOn()
    ->crfpOff()
    ->frequencyOff()
+   ->caption('CASE010')
    ->create('img/HistogramExample10.png');
 
 // CASE:11
@@ -137,6 +148,7 @@ $hg
    ->fpOff()
    ->crfpOn()
    ->frequencyOff()
+   ->caption('CASE11')
    ->create('img/HistogramExample11.png');
 
 // CASE:12
@@ -149,6 +161,7 @@ $hg
    ->fpOff()
    ->crfpOff()
    ->frequencyOn()
+   ->caption('CASE12')
    ->create('img/HistogramExample12.png');
 
 // CASE:13
@@ -161,6 +174,7 @@ $hg
    ->fpOn()
    ->crfpOn()
    ->frequencyOff()
+   ->caption('CASE13')
    ->create('img/HistogramExample13.png');
 
 // CASE:14
@@ -173,4 +187,5 @@ $hg
    ->fpOn()
    ->crfpOn()
    ->frequencyOn()
+   ->caption('CASE14')
    ->create('img/HistogramExample14.png');

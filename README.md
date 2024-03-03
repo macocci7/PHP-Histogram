@@ -1,95 +1,344 @@
 # PHP-Histogram
 
-PHP-Histogram is easy to use for creating histograms.
+## 1. Features
 
-<img src="img/HistogramExample08.png" width="300"/>　
-<img src="examples/img/ChangeProperties.png" width="380"/>
+`PHP-Histogram` is a PHP Library which is easy to use for creating histograms.
 
-## Contents
+You can create a simple Histogram just by setting `class range` and `data` and `filepath` to save.
 
-- [Installation](#installation)
-- [Usage](#usage)
-    - [Most Simple Usage](#most-simple-usage)
-    - [Change Properties](#change-properties)
-- [Examples](#examples)
-- [License](#license)
+<img src="examples/img/HistogramBasicUsage.png" width="300" />
 
-## Installation
+`Frequency Polygon`, `Cumulative Frequency Polygon`, `Cumulative Relative Frequency Polygon` and plotting `Frequency` are supported.
+
+<img src="examples/img/HistogramExample08.png" width="300" />
+
+Changing other properties, such as `Caption`, `X Label`, `Y Label`, Various `Color`s, `Canvas Size`, `Frame Ratio` and Various `Width` are supported.
+
+<img src="examples/img/ChangePropsByMethods.png" width="300"/>
+
+Transparent background is also supported.
+
+<img src="examples/img/TransparentBackground.png" width="300" alt="TransparentBackground.png" style="background: linear-gradient(to top, rgba(217, 175, 217, 0.5) 0%, rgba(151, 217, 225, 0.8) 100%), url(examples/img/misaki_park.jpg); background-position: center; background-size: cover;" />
+
+## 2. Contents
+
+- [1. Freatures](#1-features)
+- 2\. Contents
+- [3. Requirements](#3-requirements)
+- [4. Installation](#4-installation)
+- [5. Usage](#5-usage)
+    - [5.1. Basic Usage](#51-basic-usage)
+    - [5.2. Changing Properties By Methods](#52-changing-properties-by-methods)
+    - [5.3. Changing Properties By Neon File](#53-changing-properties-by-neon-file)
+    - [5.4. Changing Properties By Array](#54-changing-properties-by-array)
+    - [5.5. Transparent Background](#55-transparent-background)
+- [6. Examples](#6-examples)
+- [7. License](#7-license)
+
+## 3. Requirements
+
+- PHP 8.1 or later
+- Imagick PHP Extention
+- Composer
+
+## 4. Installation
 
 ```bash
 composer require macocci7/php-histogram
 ```
 
-## Usage
+## 5. Usage
 
-### Most Simple Usage
+### 5.1. Basic Usage
 
-- PHP
+- PHP: [examples/BasicUsage.php](examples/BasicUsage.php)
 
     ```php
     <?php
+
     require('../vendor/autoload.php');
 
     use Macocci7\PhpHistogram\Histogram;
 
     $hg = new Histogram();
-    $hg->ft->setClassRange(5);
-    $hg->ft->setData([0,5,8,10,12,13,15,16,17,18,19,20,24]);
-    $hg->create('img/Histogram.png');
+    $hg->setClassRange(5)
+    ->setData([ 0, 5, 8, 10, 12, 13, 15, 16, 17, 18, 19, 20, 24, ])
+    ->create('img/HistogramBasicUsage.png');
     ```
 
-- Result: `img/Histogram.png`
+- Result:
 
-    <img src="img/Histogram.png">
+    ![examples/img/HistogramBasicUsage.png](examples/img/HistogramBasicUsage.png)
 
-### Change Properties
+- Details:
+    - Import autoloader: `require_once('../vendor/autoload.php')`
+    - Declare: `use Macocci7\PhpHistogram\Histogram`
+    - Instantiate: `new Histogram()` or `new Histogram($width, $height)`
+        - `$width`: canvas width, type of `int`, must be `50 <= $width`, `400`px as default.
+        - `$height`: canvas height, type of `int`, must be `50 <= $height`, `300`px as default.
+    - Set Class Range: `setClassRange($classRange)`
+        - `$classRange`: type of positive `int|float`.
+    - Set Data: `setData($data)`
+        - `$data`: type of `array<int|string, int|float>`
+    - Create: `create($path2Save)`
+        - `$path2Save`: type of `string`.
+
+### 5.2. Changing Properties By Methods
 
 You can change properties of Histogram like as follows.
 
-- PHP: [ChangeProperties.php](examples/ChangeProperties.php)
+- PHP: [examples/ChangePropsByMethods.php](examples/ChangePropsByMethods.php)
 
     ```php
     <?php
+
     require('../vendor/autoload.php');
 
     use Macocci7\PhpHistogram\Histogram;
 
+    // Initialization
     $hg = new Histogram();
-    $hg->ft->setClassRange(5);
-    $hg->ft->setData([1, 5, 6, 10, 12, 14, 15, 16, 17, 18, 20, 24, 25]);
-    $hg->resize(600, 400) // Canvas Size: (width, height) / Deafult: (400, 300)
-        ->frame(0.6, 0.6) // Ratio of the size of the plot area to the Canvas Size
-        ->bgcolor('#3333cc') // only #rgb and #rrggbb formats are supported.
-        ->axis(3, '#ffffff') // width in pix and color
-        ->grid(1, '#cccccc') // width in pix and color
-        ->color('#99aaff') // color of bars
-        ->border(4, '#0000ff') // border of bars: width in pix and color
-        ->fp(4, '#00ff00') // frequency polygon: width in pix and color
-        ->crfp(3, '#ffff00') // cumulative relative frequency polygon
+    $hg->setClassRange(5)
+        ->setData([1, 5, 6, 10, 12, 14, 15, 16, 17, 18, 20, 24, 25])
 
-        // Note: Set the real path to the true type font (*.ttf) on your system.
+        // Changing Props By Methods
+
+        // Canvas Size: ($width, $height) / Deafult: (400, 300)
+        // 50 <= $width / 50 <= $height
+        ->resize(600, 400)
+
+        // Ratio of the size of the plot area to the Canvas Size
+        // frame($width, $height) / Default: (0.8, 0.7)
+        // 0 < $width <= 1.0 / 0 < $height <= 1.0
+        ->frame(0.6, 0.6)
+
+        // Canvas Background Color
+        // only #rgb and #rrggbb formats are supported.
+        ->bgcolor('#3333cc')
+
+        // Axis: width in pix and color
+        ->axis(3, '#ffffff')
+
+        // Grid: width in pix and color
+        ->grid(1, '#cccccc')
+
+        // Color of bars
+        ->color('#99aaff')
+
+        // Border of bars: width in pix and color
+        ->border(4, '#0000ff')
+
+        // Frequency Polygon: width in pix and color
+        ->fp(4, '#00ff00')
+
+        // Cumulative Relative Frequency Polygon
+        ->crfp(3, '#ffff00')
+
+        // Font Path
+        // Note: Set the real path to the true type font (*.ttf)
+        //       on your system.
         ->fontPath('/usr/share/fonts/truetype/ipafont-nonfree-uigothic/ipagui.ttf')
+
+        // Font Size in pix
         ->fontSize(20)
+
+        // Font Color
         ->fontColor('#ffff99')
-        ->barOn() // Histogram bars
-        ->fpOn() // frequency polygon
-        ->crfpOn() // cumulative frequency polygon
-        ->frequencyOn() // frequency
+
+        // Visibility of Histogram bars. barOff() is also available
+        ->barOn()
+
+        // Visibility of frequency polygon. fpOff() is also available
+        ->fpOn()
+
+        // Visibility of cumulative frequency polygon. crfpOff() is also available
+        ->crfpOn()
+
+        // Visibility of frequency. frequencyOff() is also available
+        ->frequencyOn()
+
+        // X Label
         ->labelX('Class (Items)')
+
+        // Y Label
         ->labelY('Frequency (People)')
-        ->caption('Items Purchased / month（May 2023）')
-        ->create('img/ChangeProperties.png');
+
+        // Caption
+        ->caption('Items Purchased / month（Feb 2024）')
+
+        // Save
+        ->create('img/ChangePropsByMethods.png');
     ```
 
-- Result: [ChangeProperties.png](examples/img/ChangeProperties.png)
+- Result: [examples/img/ChangePropsByMethods.png](examples/img/ChangePropsByMethods.png)
 
-    ![ChangeProperties.png](examples/img/ChangeProperties.png)
+    ![examples/img/ChangePropsByMethods.png](examples/img/ChangePropsByMethods.png)
 
-## Examples
+### 5.3. Changing Properties By Neon File
 
-- [HistogramExample.php](examples/HistogramExample.php) >> results in:
+You can change properties of Histogram like as follows.
 
-    ![Histogram.png](examples/img/Histogram.png)
+First, create a Neon file.
+
+- Neon File: [examples/ChangePropsByNeon.neon](examples/ChangePropsByNeon.neon)
+
+    ```neon
+    canvasWidth: 600
+    canvasHeight: 400
+    canvasBackgroundColor: '#223399'
+    frameXRatio: 0.7
+    frameYRatio: 0.6
+    axisColor: '#999'
+    axisWidth: 3
+    gridColor: '#eee'
+    gridWidth: 1
+    gridHeightPitch: 1
+    barBackgroundColor: '#ffcc33'
+    barBorderColor: '#ff6600'
+    barBorderWidth: 2
+    frequencyPolygonColor: '#33cc00'
+    frequencyPolygonWidth: 3
+    cumulativeRelativeFrequencyPolygonColor: '#ff00ff'
+    cumulativeRelativeFrequencyPolygonWidth: 7
+    fontPath: 'fonts/ipaexm.ttf'
+    fontSize: 24
+    fontColor: '#eeeeee'
+    showBar: true
+    showFrequencyPolygon: true
+    showCumulativeRelativeFrequencyPolygon: true
+    showFrequency: true
+    labelX: 'Class (Items)'
+    labelY: 'Frequency (People)'
+    caption: 'Items Purchased / month（Feb 2024）'
+    ```
+
+Second, Code PHP as follows.
+
+- PHP: [examples/ChangePropsByNeon.php](examples/ChangePropsByNeon.php)
+
+    ```php
+    <?php
+
+    require_once('../vendor/autoload.php');
+
+    use Macocci7\PhpHistogram\Histogram;
+
+    $hg = new Histogram();
+    $hg->setClassRange(5)
+       ->setData([1, 5, 6, 10, 12, 14, 15, 16, 17, 18, 20, 24, 25])
+       ->config('ChangePropsByNeon.neon')
+       ->create('img/ChangePropsByNeon.png');
+    ```
+
+Then, run the PHP code and view the result.
+
+- Result: [examples/img/ChangePropsByNeon.png](examples/img/ChangePropsByNeon.png)
+
+    ![examples/img/ChangePropsByNeon.png](examples/img/ChangePropsByNeon.png)
+
+### 5.4. Changing Properties By Array
+
+You can change properties of Histogram like as follows.
+
+- PHP:
+
+    ```php
+    <?php
+
+    require_once('../vendor/autoload.php');
+
+    use Macocci7\PhpHistogram\Histogram;
+
+    $props = [
+        'canvasWidth' => 600,
+        'canvasHeight' => 400,
+        'canvasBackgroundColor' => '#224499',
+        'frameXRatio' => 0.7,
+        'frameYRatio' => 0.6,
+        'axisColor' => '#999',
+        'axisWidth' => 3,
+        'gridColor' => '#eee',
+        'gridWidth' => 1,
+        'gridHeightPitch' => 1,
+        'barBackgroundColor' => '#ffcc66',
+        'barBorderColor' => '#ff6600',
+        'barBorderWidth' => 2,
+        'frequencyPolygonColor' => '#33cc00',
+        'frequencyPolygonWidth' => 3,
+        'cumulativeRelativeFrequencyPolygonColor' => '#ff5577',
+        'cumulativeRelativeFrequencyPolygonWidth' => 7,
+        'fontPath' => 'fonts/ipaexg.ttf',
+        'fontSize' => 24,
+        'fontColor' => '#eeeeee',
+        'showBar' => true,
+        'showFrequencyPolygon' => true,
+        'showCumulativeRelativeFrequencyPolygon' => true,
+        'showFrequency' => true,
+        'labelX' => 'Class (Items)',
+        'labelY' => 'Frequency (People)',
+        'caption' => 'Items Purchased / month（Feb 2024）',
+    ];
+
+    $hg = new Histogram();
+    $hg->setClassRange(5)
+       ->setData([1, 5, 6, 10, 12, 14, 15, 16, 17, 18, 20, 24, 25])
+       ->config($props)
+       ->create('img/ChangePropsByArray.png');
+    ```
+
+- Result: [examples/img/ChangePropsByArray.png](examples/img/ChangePropsByArray.png)
+
+    ![examples/img/ChangePropsByArray.png](examples/img/ChangePropsByArray.png)
+
+### 5.5. Transparent Background
+
+Setting colors to transparent is supported.
+
+For example,
+
+- PHP: [examples/TransparentBackground.php](examples/TransparentBackground.php)
+
+    ```php
+    <?php
+
+    require_once('../vendor/autoload.php');
+
+    use Macocci7\PhpHistogram\Histogram;
+
+    $hg = new Histogram();
+    $hg->config([
+            'canvasBackgroundColor' => null,
+            'barBackgroundColor' => '#ccccff',
+            'barBorderColor' => '#0000ff',
+            'barBorderWidth' => 2,
+            'gridColor' => '#cc6666',
+            'gridWidth' => 1,
+            'axisColor' => '#aa6633',
+            'fontColor' => '#882222',
+            'caption' => 'Transparent Background',
+       ])
+       ->setClassRange(5)
+       ->setData([ 1, 5, 8, 10, 11, 14, 16, 19, 20, ])
+       ->create('img/TransparentBackground.png');
+    ```
+
+- Result: [examples/img/TransparentBackground.png](examples/img/TransparentBackground.png)
+
+    Another image is set as the background with css.
+
+    <img src="examples/img/TransparentBackground.png" alt="TransparentBackground.png" style="background: linear-gradient(to top, rgba(217, 175, 217, 0.5) 0%, rgba(151, 217, 225, 0.8) 100%), url(examples/img/misaki_park.jpg); background-position: center; background-size: cover;" />
+
+## 6. Examples
+
+- [BasicUsage.php](examples/BasicUsage.php) >> results in: [HistogramBasicUsage.png](examples/img/HistogramBasicUsage.png)
+
+- [ChangePropsByMethods.php](examples/ChangePropsByMethods.php) >> results in: [ChangePropsByMethods.png](examples/img/ChangePropsByMethods.png)
+
+- [ChangePropsByNeon.php](examples/ChangePropsByNeon.php) >> results in: [ChangePropsByNeon.png](examples/img/ChangePropsByNeon.png)
+
+- [ChangePropsByArray.php](examples/ChangePropsByArray.php) >> results in: [ChangePropsByArray.png](examples/img/ChangePropsByArray.png)
+
+- [TransparentBackground.php](examples/TransparentBackground.php) >> results in: [TranxparentBackground.png](examples/img/TransparentBackground.png)
 
 - [HistogramExampleCase.php](examples/HistogramExampleCase.php) >> results in [HistogramExampleCase.md](examples/HistogramExampleCase.md)
 
@@ -97,7 +346,7 @@ You can change properties of Histogram like as follows.
 
 - [PopulationInJapanHistogram2022.php](examples/PopulationInJapanHistogram2022.php) >> results in [PopulationInJapanHistogram2022.md](examples/PopulationInJapanHistogram2022.md)
 
-## License
+## 7. License
 
 [MIT](LICENSE)
 
@@ -105,6 +354,6 @@ You can change properties of Histogram like as follows.
 
 *Document created: 2023/05/28*
 
-*Document updated: 2023/06/03*
+*Document updated: 2024/03/03*
 
-Copyright 2023 macocci7
+Copyright 2023-2024 macocci7
