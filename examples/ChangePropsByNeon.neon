@@ -1,0 +1,27 @@
+canvasWidth: 600
+canvasHeight: 400
+canvasBackgroundColor: '#223399'
+frameXRatio: 0.7
+frameYRatio: 0.6
+axisColor: '#999'
+axisWidth: 3
+gridColor: '#eee'
+gridWidth: 1
+gridHeightPitch: 1
+barBackgroundColor: '#ffcc33'
+barBorderColor: '#ff6600'
+barBorderWidth: 2
+frequencyPolygonColor: '#33cc00'
+frequencyPolygonWidth: 3
+cumulativeRelativeFrequencyPolygonColor: '#ff00ff'
+cumulativeRelativeFrequencyPolygonWidth: 7
+fontPath: 'fonts/ipaexm.ttf'
+fontSize: 24
+fontColor: '#eeeeee'
+showBar: true
+showFrequencyPolygon: true
+showCumulativeRelativeFrequencyPolygon: true
+showFrequency: true
+labelX: 'Class (Items)'
+labelY: 'Frequency (People)'
+caption: 'Items Purchased / month（Feb 2024）'

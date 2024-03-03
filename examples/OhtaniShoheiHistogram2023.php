@@ -8,9 +8,11 @@ use Macocci7\CsvUtil;
 
 $csvUtil = new CsvUtil();
 
-$hg = new Histogram();
-$hg->frequencyOn();
-$hg->ft->setClassRange(5);
+$hg = new Histogram(360, 240);
+$hg->setClassRange(5)
+   ->frame(0.75, 0.65)
+   ->fontSize(14)
+   ->frequencyOn();
 
 $dailyData = $csvUtil->getDailyData('csv/660271_data.csv');
 
@@ -24,9 +26,9 @@ foreach (array_keys($dailyData) as $key) {
 }
 foreach ($dailyData as $key => $data) {
     echo "\n## " . $key . "\n\n";
-    $hg->ft->setData($data);
     $histogramPath = 'img/HistogramOhtaniShohei' . $key . '.png';
-    $hg->create($histogramPath, ['bar' => true, 'frequency' => true]);
+    $hg->setData($data)
+       ->create($histogramPath);
     echo "<details><summary>Properties</summary>\n\n";
     echo "|Property|Value|\n";
     echo "|:---|---:|\n";
@@ -43,7 +45,7 @@ foreach ($dailyData as $key => $data) {
     echo "|QuartileDeviation|" . $hg->ft->getQuartileDeviation($data) . "|\n";
     echo "</details>\n\n";
     echo "<details><summary>Frequency Table</summary>\n\n";
-    $hg->ft->show();
+    echo $hg->ft->meanOn()->markdown();
     echo "</details>\n\n";
     echo "\n\n";
     echo "![Histogram:" . $key . "](" . $histogramPath . ")";

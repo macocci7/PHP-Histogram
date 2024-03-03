@@ -1,0 +1,20 @@
+canvasWidth: 100
+canvasHeight: '60'
+canvasBackgroundColor: '#0000ff'
+frameXRatio: 0.9
+frameYRatio: 0.9
+axisColor: null
+axisWidth: 1
+gridColor: null
+gridWidth: 1
+gridHeightPitch: 1
+barBackgroundColor: '#ffcc00'
+barBorderColor: '#ff6600'
+barBorderWidth: 1
+frequencyPolygonColor:
+#frequencyPolygonWidth:
+#cumulativeRelativeFrequencyPolygonColor:
+#cumulativeRelativeFrequencyPolygonWidth:
+#fontPath:
+#fontSize:
+#fontColor:
