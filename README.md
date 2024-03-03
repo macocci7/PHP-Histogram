@@ -324,9 +324,11 @@ For example,
 
 - Result: [examples/img/TransparentBackground.png](examples/img/TransparentBackground.png)
 
-    Another image is set as the background with css.
+    <img src="examples/img/TransparentBackground.png" alt="TransparentBackground.png" />
 
-    <img src="examples/img/TransparentBackground.png" alt="TransparentBackground.png" style="background: linear-gradient(to top, rgba(217, 175, 217, 0.5) 0%, rgba(151, 217, 225, 0.8) 100%), url(examples/img/misaki_park.jpg); background-position: center; background-size: cover;" />
+    Check if the image has transparent background with HTML:
+
+    [examples/TransparentBackground.html](examples/TransparentBackground.html)
 
 ## 6. Examples
 
