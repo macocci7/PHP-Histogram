@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Macocci7\PhpHistogram;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Macocci7\PhpHistogram\Histogram;
 use Nette\Neon\Neon;
@@ -14,7 +15,6 @@ use Nette\Neon\Neon;
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CamelCaseMethodName)
- * @SuppressWarnings(PHPMD.ElseExpression)
  */
 final class HistogramTest extends TestCase
 {
@@ -60,9 +60,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_size_can_return_size_correctly
-     */
+    #[DataProvider('provide_size_can_return_size_correctly')]
     public function test_size_can_return_size_correctly(int|null $width, int|null $height, array|null $expect): void
     {
         if (is_null($width) && is_null($height)) {
@@ -93,9 +91,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_resize_can_throw_exception_with_invalid_params
-     */
+    #[DataProvider('provide_resize_can_throw_exception_with_invalid_params')]
     public function test_resize_can_throw_exception_with_invalid_params(int $width, int $height, string $message): void
     {
         $hg = new Histogram();
@@ -116,9 +112,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_frame_can_throw_exception_with_invalid_parameter
-     */
+    #[DataProvider('provide_frame_can_throw_exception_with_invalid_parameter')]
     public function test_frame_can_throw_exception_with_invalid_parameter(float $x, float $y): void
     {
         $hg = new Histogram();
@@ -134,9 +128,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_frame_can_set_frame_ratio_correctly
-     */
+    #[DataProvider('provide_frame_can_set_frame_ratio_correctly')]
     public function test_frame_can_set_frame_ratio_correctly(float $x, float $y, array $expect): void
     {
         $hg = new Histogram();
@@ -159,9 +151,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_bgcolor_can_throw_exception_with_invalid_param
-     */
+    #[DataProvider('provide_bgcolor_can_throw_exception_with_invalid_param')]
     public function test_bgcolor_can_throw_exception_with_invalid_param(string $color): void
     {
         $hg = new Histogram();
@@ -179,9 +169,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_bgcolor_can_work_correctly
-     */
+    #[DataProvider('provide_bgcolor_can_work_correctly')]
     public function test_bgcolor_can_work_correctly(string $color, string $expect): void
     {
         $hg = new Histogram();
@@ -205,9 +193,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_axis_can_throw_exception_with_invalid_params
-     */
+    #[DataProvider('provide_axis_can_throw_exception_with_invalid_params')]
     public function test_axis_can_throw_exception_with_invalid_params(int $width, mixed $color): void
     {
         $hg = new Histogram();
@@ -228,9 +214,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_axis_can_set_property
-     */
+    #[DataProvider('provide_axis_can_set_property')]
     public function test_axis_can_set_property(int $width, string|null $color, array $expect): void
     {
         $hg = new Histogram();
@@ -255,9 +239,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_grid_can_throw_exception_with_invalid_params
-     */
+    #[DataProvider('provide_grid_can_throw_exception_with_invalid_params')]
     public function test_grid_can_throw_exception_with_invalid_params(int $width, string|null $color): void
     {
         $hg = new Histogram();
@@ -278,9 +260,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_grid_can_set_property
-     */
+    #[DataProvider('provide_grid_can_set_property')]
     public function test_grid_can_set_property(int $width, string|null $color, array $expect): void
     {
         $hg = new Histogram();
@@ -305,9 +285,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_color_can_throw_exception_with_invalid_param
-     */
+    #[DataProvider('provide_color_can_throw_exception_with_invalid_param')]
     public function test_color_can_throw_exception_with_invalid_param(string $color): void
     {
         $hg = new Histogram();
@@ -323,9 +301,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_color_can_set_color
-     */
+    #[DataProvider('provide_color_can_set_color')]
     public function test_color_can_set_color(string $color, string $expect): void
     {
         $hg = new Histogram();
@@ -351,9 +327,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_border_can_throw_exception_with_invalid_parameter
-     */
+    #[DataProvider('provide_border_can_throw_exception_with_invalid_parameter')]
     public function test_border_can_throw_exception_with_invalid_parameter(int $width, string|null $color): void
     {
         $hg = new Histogram();
@@ -373,9 +347,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_border_can_set_border
-     */
+    #[DataProvider('provide_border_can_set_border')]
     public function test_border_can_set_border(int $width, string|null $color, array $expect): void
     {
         $hg = new Histogram();
@@ -402,9 +374,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_fp_can_throw_exception_with_invalid_parameter
-     */
+    #[DataProvider('provide_fp_can_throw_exception_with_invalid_parameter')]
     public function test_fp_can_throw_exception_with_invalid_parameter(int $width, string|null $color): void
     {
         $hg = new Histogram();
@@ -424,9 +394,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_fp_can_set_width_and_color
-     */
+    #[DataProvider('provide_fp_can_set_width_and_color')]
     public function test_fp_can_set_width_and_color(int $width, mixed $color, array $expect): void
     {
         $hg = new Histogram();
@@ -453,9 +421,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_crfp_can_throw_exception_with_invalid_parameter
-     */
+    #[DataProvider('provide_crfp_can_throw_exception_with_invalid_parameter')]
     public function test_crfp_can_throw_exception_with_invalid_parameter(int $width, string|null $color): void
     {
         $hg = new Histogram();
@@ -475,9 +441,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_crfp_can_set_width_and_color
-     */
+    #[DataProvider('provide_crfp_can_set_width_and_color')]
     public function test_crfp_can_set_width_and_color(int $width, string|null $color, array $expect): void
     {
         $hg = new Histogram();
@@ -496,9 +460,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_fontPath_can_throw_exception_with_invalid_parameter
-     */
+    #[DataProvider('provide_fontPath_can_throw_exception_with_invalid_parameter')]
     public function test_fontPath_can_throw_exception_with_invalid_parameter(string $path): void
     {
         $hg = new Histogram();
@@ -514,9 +476,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_fontPath_can_set_font_path_correctly
-     */
+    #[DataProvider('provide_fontPath_can_set_font_path_correctly')]
     public function test_fontPath_can_set_font_path_correctly(string $path, string $expect): void
     {
         $hg = new Histogram();
@@ -537,9 +497,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_fontSize_can_throw_exception_with_invalid_parameter
-     */
+    #[DataProvider('provide_fontSize_can_throw_exception_with_invalid_parameter')]
     public function test_fontSize_can_throw_exception_with_invalid_parameter(int $size): void
     {
         $hg = new Histogram();
@@ -555,9 +513,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_fontSize_can_set_font_size_correctly
-     */
+    #[DataProvider('provide_fontSize_can_set_font_size_correctly')]
     public function test_fontSize_can_set_font_size_correctly(int $size, int $expect): void
     {
         $hg = new Histogram();
@@ -581,9 +537,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_fontColor_can_throw_exception_with_invalid_param
-     */
+    #[DataProvider('provide_fontColor_can_throw_exception_with_invalid_param')]
     public function test_fontColor_can_throw_exception_with_invalid_param(string $color): void
     {
         $hg = new Histogram();
@@ -599,9 +553,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_fontColor_can_set_color
-     */
+    #[DataProvider('provide_fontColor_can_set_color')]
     public function test_fontColor_can_set_color(string $color, string $expect): void
     {
         $hg = new Histogram();
@@ -623,9 +575,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_config_can_throw_exception_with_invalid_param
-     */
+    #[DataProvider('provide_config_can_throw_exception_with_invalid_param')]
     public function test_config_can_throw_exception_with_invalid_param(string|array $configResource, string $message): void
     {
         $hg = new Histogram();
@@ -677,9 +627,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_config_can_set_config_from_array_correctly
-     */
+    #[DataProvider('provide_config_can_set_config_from_array_correctly')]
     public function test_config_can_set_config_from_array_correctly(array $userConf): void
     {
         $hg = new Histogram();
@@ -713,9 +661,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_setClassRange_can_throw_exception_with_invalid_param
-     */
+    #[DataProvider('provide_setClassRange_can_throw_exception_with_invalid_param')]
     public function test_setClassRange_can_throw_exception_with_invalid_param(int|float $classRange): void
     {
         $hg = new Histogram();
@@ -736,9 +682,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_setClassRange_can_set_class_range_correctly
-     */
+    #[DataProvider('provide_setClassRange_can_set_class_range_correctly')]
     public function test_setClassRange_can_set_class_range_correctly(int|float $classRange): void
     {
         $hg = new Histogram();
@@ -758,9 +702,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_setData_can_throw_exception_with_invalid_param
-     */
+    #[DataProvider('provide_setData_can_throw_exception_with_invalid_param')]
     public function test_setData_can_throw_exception_with_invalid_param(array $data): void
     {
         $hg = new Histogram();
@@ -778,9 +720,7 @@ final class HistogramTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_setData_can_set_data_correctly
-     */
+    #[DataProvider('provide_setData_can_set_data_correctly')]
     public function test_setData_can_set_data_correctly(array $data): void
     {
         $hg = new Histogram();

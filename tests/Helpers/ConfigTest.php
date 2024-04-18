@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Macocci7\PhpHistogram\Helpers;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Macocci7\PhpHistogram\Helpers\Config;
 use Nette\Neon\Neon;
 
 /**
- * @SuppressWarnings(PHPMD.TooManyMethods)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.CamelCaseMethodName)
  */
 final class ConfigTest extends TestCase
@@ -59,9 +58,7 @@ final class ConfigTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_className_can_return_class_name_correctly
-     */
+    #[DataProvider('provide_className_can_return_class_name_correctly')]
     public function test_className_can_return_class_name_correctly(string $class, string $expect): void
     {
         $this->assertSame($expect, Config::className($class));
@@ -91,9 +88,7 @@ final class ConfigTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_support_object_like_keys_correctly
-     */
+    #[DataProvider('provide_support_object_like_keys_correctly')]
     public function get_can_support_object_like_keys_correctly(string $key, array|null $expect): void
     {
         $this->assertSame($expect, Config::get($key));
@@ -180,9 +175,7 @@ final class ConfigTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_isValid_can_judge_correctly
-     */
+    #[DataProvider('provide_isValid_can_judge_correctly')]
     public function test_isValid_can_judge_correctly(mixed $input, string $def, bool $expect): void
     {
         $this->assertSame($expect, Config::isValid($input, $def));
