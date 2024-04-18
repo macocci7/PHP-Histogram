@@ -56,7 +56,7 @@ composer require macocci7/php-histogram
     ```php
     <?php
 
-    require('../vendor/autoload.php');
+    require_once __DIR__ . '/../vendor/autoload.php';
 
     use Macocci7\PhpHistogram\Histogram;
 
@@ -71,7 +71,7 @@ composer require macocci7/php-histogram
     ![examples/img/HistogramBasicUsage.png](examples/img/HistogramBasicUsage.png)
 
 - Details:
-    - Import autoloader: `require_once('../vendor/autoload.php')`
+    - Import autoloader: `require_once __DIR__ . '/../vendor/autoload.php'`
     - Declare: `use Macocci7\PhpHistogram\Histogram`
     - Instantiate: `new Histogram()` or `new Histogram($width, $height)`
         - `$width`: canvas width, type of `int`, must be `50 <= $width`, `400`px as default.
@@ -92,7 +92,7 @@ You can change properties of Histogram like as follows.
     ```php
     <?php
 
-    require('../vendor/autoload.php');
+    require_once __DIR__ . '/../vendor/autoload.php';
 
     use Macocci7\PhpHistogram\Histogram;
 
@@ -219,7 +219,7 @@ Second, Code PHP as follows.
     ```php
     <?php
 
-    require_once('../vendor/autoload.php');
+    require_once __DIR__ . '/../vendor/autoload.php';
 
     use Macocci7\PhpHistogram\Histogram;
 
@@ -245,7 +245,7 @@ You can change properties of Histogram like as follows.
     ```php
     <?php
 
-    require_once('../vendor/autoload.php');
+    require_once __DIR__ . '/../vendor/autoload.php';
 
     use Macocci7\PhpHistogram\Histogram;
 
@@ -301,7 +301,7 @@ For example,
     ```php
     <?php
 
-    require_once('../vendor/autoload.php');
+    require_once __DIR__ . '/../vendor/autoload.php';
 
     use Macocci7\PhpHistogram\Histogram;
 
@@ -356,6 +356,6 @@ For example,
 
 *Document created: 2023/05/28*
 
-*Document updated: 2024/03/03*
+*Document updated: 2024/04/18*
 
 Copyright 2023-2024 macocci7

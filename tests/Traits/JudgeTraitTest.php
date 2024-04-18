@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Macocci7\PhpHistogram\Traits;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Macocci7\PhpHistogram\Traits\JudgeTrait;
 use Nette\Neon\Neon;
 
 /**
- * @SuppressWarnings(PHPMD.TooManyMethods)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.CamelCaseMethodName)
  */
 final class JudgeTraitTest extends TestCase
@@ -43,9 +42,7 @@ final class JudgeTraitTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_isNumber_can_judge_correctly
-     */
+    #[DataProvider('provide_isNumber_can_judge_correctly')]
     public function test_isNumber_can_judge_correctly(mixed $item, bool $expect): void
     {
         $this->assertSame($expect, $this->isNumber($item));
@@ -76,9 +73,7 @@ final class JudgeTraitTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_isColorCode_can_judge_correctly
-     */
+    #[DataProvider('provide_isColorCode_can_judge_correctly')]
     public function test_isColorCode_can_judge_correctly(string $color, bool $expect): void
     {
         $this->assertSame($expect, $this->isColorCode($color));
