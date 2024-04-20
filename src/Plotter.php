@@ -2,53 +2,34 @@
 
 namespace Macocci7\PhpHistogram;
 
-use Macocci7\PhpHistogram\Helpers\Config;
-use Macocci7\PhpHistogram\Traits\JudgeTrait;
+use Intervention\Image\Geometry\Factories\LineFactory;
+use Intervention\Image\Geometry\Factories\RectangleFactory;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Interfaces\ImageInterface;
-use Macocci7\PhpFrequencyTable\FrequencyTable;
-use Intervention\Image\Geometry\Factories\LineFactory;
 use Intervention\Image\Typography\FontFactory;
-use Intervention\Image\Geometry\Factories\RectangleFactory;
+use Macocci7\PhpFrequencyTable\FrequencyTable;
+use Macocci7\PhpHistogram\Helpers\Config;
 
 /**
  * Class for Plotting Histogram
  * @author  macocci7 <macocci7@yahoo.co.jp>
  * @license MIT
- * @SuppressWarnings(PHPMD.TooManyFields)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class Plotter
 {
-    use JudgeTrait;
+    use Traits\JudgeTrait;
+    use Traits\AttributeTrait;
+    use Traits\StyleTrait;
+    use Traits\VisibilityTrait;
 
     public FrequencyTable $ft;
     protected string $imageDriver;
     protected ImageManager $imageManager;
     protected ImageInterface $image;
-    protected int $canvasWidth;
-    protected int $canvasHeight;
-    protected string|null $canvasBackgroundColor;
-    protected float $frameXRatio;
-    protected float $frameYRatio;
-    protected string|null $axisColor;
-    protected int $axisWidth;
-    protected string|null $gridColor;
-    protected int $gridWidth;
     protected int|float $gridHeightPitch;
     protected int $barWidth;
     protected int|float $barHeightPitch;
-    protected string|null $barBackgroundColor;
-    protected string|null $barBorderColor;
-    protected int $barBorderWidth;
-    protected string|null $frequencyPolygonColor;
-    protected int $frequencyPolygonWidth;
-    protected string|null $cumulativeRelativeFrequencyPolygonColor;
-    protected int $cumulativeRelativeFrequencyPolygonWidth;
-    protected string $fontPath;
-    protected int $fontSize;
-    protected string|null $fontColor;
     protected int $barMaxValue;
     protected int $barMinValue;
     protected int $baseX;
@@ -57,16 +38,6 @@ class Plotter
      * @var array<mixed>    $parsed = []
      */
     protected array $parsed = [];
-    protected bool $showBar;
-    protected bool $showGrid;
-    protected bool $showGridValues;
-    protected bool $showAxis;
-    protected bool $showFrequencyPolygon;
-    protected bool $showCumulativeRelativeFrequencyPolygon;
-    protected bool $showFrequency;
-    protected string $labelX;
-    protected string $labelY;
-    protected string $caption;
     /**
      * @var array<string, array<string, string>>    $validConfig
      */
@@ -152,7 +123,7 @@ class Plotter
      * returns position of horizontal axis
      * @return  int[]
      */
-    public function getHorizontalAxisPosition()
+    private function getHorizontalAxisPosition()
     {
         return [
             (int) $this->baseX,
@@ -166,7 +137,7 @@ class Plotter
      * returns position of vertical axis
      * @return  int[]
      */
-    public function getVerticalAxisPosition()
+    private function getVerticalAxisPosition()
     {
         return [
             (int) $this->baseX,
@@ -180,7 +151,7 @@ class Plotter
      * plots axis
      * @return  self
      */
-    public function plotAxis()
+    private function plotAxis()
     {
         if (!$this->showAxis) {
             return $this;
@@ -210,7 +181,7 @@ class Plotter
      * plots grids
      * @return  self
      */
-    public function plotGrids()
+    private function plotGrids()
     {
         if (!$this->showGrid) {
             return $this;
@@ -248,7 +219,7 @@ class Plotter
      * plots grid values
      * @return  self
      */
-    public function plotGridValues()
+    private function plotGridValues()
     {
         if (!$this->showGridValues) {
             return $this;
@@ -278,7 +249,7 @@ class Plotter
      * @param   int $index
      * @return  int[]
      */
-    public function getBarPosition(int $frequency, int $index)
+    private function getBarPosition(int $frequency, int $index)
     {
         return [
             (int) ($this->baseX + $index * $this->barWidth),
@@ -294,7 +265,7 @@ class Plotter
      * @thrown  \Exception
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public function plotBars()
+    private function plotBars()
     {
         if (!$this->showBar) {
             return $this;
@@ -330,7 +301,7 @@ class Plotter
      * @return  self
      * @thrown  \Exception
      */
-    public function plotClasses()
+    private function plotClasses()
     {
         if (!array_key_exists('Classes', $this->parsed)) {
             throw new \Exception("Classes not found.");
@@ -374,7 +345,7 @@ class Plotter
      * @return  self
      * @thrown  \Exception
      */
-    public function plotFrequencyPolygon()
+    private function plotFrequencyPolygon()
     {
         if (!$this->showFrequencyPolygon) {
             return $this;
@@ -413,7 +384,7 @@ class Plotter
      * @thrown  \Exception
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public function plotCumulativeRelativeFrequencyPolygon()
+    private function plotCumulativeRelativeFrequencyPolygon()
     {
         if (!$this->showCumulativeRelativeFrequencyPolygon) {
             return $this;
@@ -455,7 +426,7 @@ class Plotter
      * @return  self
      * @thrown  \Exception
      */
-    public function plotFrequencies()
+    private function plotFrequencies()
     {
         if (!$this->showFrequency) {
             return $this;
@@ -493,7 +464,7 @@ class Plotter
      * plots label of X
      * @return  self
      */
-    public function plotLabelX()
+    private function plotLabelX()
     {
         if (!$this->labelX) {
             return $this;
@@ -519,7 +490,7 @@ class Plotter
      * plots label of Y
      * @return  self
      */
-    public function plotLabelY()
+    private function plotLabelY()
     {
         if (!$this->labelY) {
             return $this;
@@ -551,7 +522,7 @@ class Plotter
      * plots caption
      * @return  self
      */
-    public function plotCaption()
+    private function plotCaption()
     {
         if (!$this->caption) {
             return $this;
@@ -578,7 +549,6 @@ class Plotter
      * @param   string  $filePath
      * @return  self
      * @thrown  \Exception
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function create(string $filePath)
     {
