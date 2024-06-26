@@ -1,10 +1,8 @@
 <?php
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/class/CsvUtil.php';
 
 use Macocci7\PhpHistogram\Histogram;
-use Macocci7\CsvUtil;
 
 $hg = new Histogram(360, 240);
 $hg->ft->setClassRange(10);

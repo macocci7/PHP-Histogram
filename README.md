@@ -137,7 +137,7 @@ You can change properties of Histogram like as follows.
         // Font Path
         // Note: Set the real path to the true type font (*.ttf)
         //       on your system.
-        ->fontPath('/usr/share/fonts/truetype/ipafont-nonfree-uigothic/ipagui.ttf')
+        ->fontPath('/usr/share/fonts/opentype/ipafont-gothic/ipagp.ttf')
 
         // Font Size in pix
         ->fontSize(20)
@@ -356,6 +356,6 @@ For example,
 
 *Document created: 2023/05/28*
 
-*Document updated: 2024/04/18*
+*Document updated: 2024/06/26*
 
 Copyright 2023-2024 macocci7
