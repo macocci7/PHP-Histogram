@@ -45,7 +45,7 @@ $hg->setClassRange(5)
    // Font Path
    // Note: Set the real path to the true type font (*.ttf)
    //       on your system.
-   ->fontPath('/usr/share/fonts/truetype/ipafont-nonfree-uigothic/ipagui.ttf')
+   ->fontPath('/usr/share/fonts/opentype/ipafont-gothic/ipagp.ttf')
 
    // Font Size in pix
    ->fontSize(20)
