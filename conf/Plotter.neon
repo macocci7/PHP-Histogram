@@ -1,8 +1,9 @@
-#imageDriver: 'gd'
-imageDriver: 'imagick'
+# Configuration for Macocci7\PhpHistogram\Ploter
 
 # Default Properties
 canvasBackgroundColor: '#ffffff'
+plotarea:
+    backgroundColor:
 frameXRatio: 0.8
 frameYRatio: 0.7
 axisColor: '#666666'
@@ -28,8 +29,14 @@ showFrequencyPolygon: false
 showCumulativeRelativeFrequencyPolygon: false
 showFrequency: false
 labelX: ''
+labelXOffsetX: 0
+labelXOffsetY: 0
 labelY: ''
+labelYOffsetX: 0
+labelYOffsetY: 0
 caption: ''
+captionOffsetX: 0
+captionOffsetY: 0
 validConfig:
     canvasWidth:
         type: int
@@ -37,6 +44,8 @@ validConfig:
         type: int
     canvasBackgroundColor:
         type: colorCode|null
+    plotarea:
+        type: array
     frameXRatio:
         type: float
     frameYRatio:
@@ -87,7 +96,19 @@ validConfig:
         type: bool
     labelX:
         type: string
+    labelXOffsetX:
+        type: int
+    labelXOffsetY:
+        type: int
     labelY:
         type: string
+    labelYOffsetX:
+        type: int
+    labelYOffsetY:
+        type: int
     caption:
         type: string
+    captionOffsetX:
+        type: int
+    captionOffsetY:
+        type: int

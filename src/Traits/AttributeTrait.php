@@ -9,11 +9,21 @@ trait AttributeTrait
 
     protected int $canvasWidth;
     protected int $canvasHeight;
+    /**
+     * @var array<string, int|int[]>    $plotarea
+     */
+    protected array $plotarea = [];
     protected float $frameXRatio;
     protected float $frameYRatio;
     protected string $labelX;
+    protected int $labelXOffsetX;
+    protected int $labelXOffsetY;
     protected string $labelY;
+    protected int $labelYOffsetX;
+    protected int $labelYOffsetY;
     protected string $caption;
+    protected int $captionOffsetX;
+    protected int $captionOffsetY;
 
     /**
      * returns current canvas size
@@ -54,6 +64,36 @@ trait AttributeTrait
     }
 
     /**
+     * sets plotarea
+     *
+     * @param   int[]       $offset = []
+     * @param   int         $width = 0
+     * @param   int         $height = 0
+     * @param   string|null $backgroundColor = null
+     * @return  self
+     */
+    public function plotarea(
+        array $offset = [],
+        int $width = 0,
+        int $height = 0,
+        string|null $backgroundColor = null,
+    ) {
+        if ($offset !== []) {
+            $this->plotarea['offset'] = $offset;
+        }
+        if ($width > 0) {
+            $this->plotarea['width'] = $width;
+        }
+        if ($height > 0) {
+            $this->plotarea['height'] = $height;
+        }
+        if ($this->isColorCode($backgroundColor) || is_null($backgroundColor)) {
+            $this->plotarea['backgroundColor'] = $backgroundColor;
+        }
+        return $this;
+    }
+
+    /**
      * sets the frame ratio of the histogram area to the canvas size
      * @param   float   $xRatio (0.0 < $xRatio < 1.0)
      * @param   float   $yRatio (0.0 < $yRatio < 1.0)
@@ -76,33 +116,54 @@ trait AttributeTrait
     /**
      * sets label of X
      * @param   string  $label
+     * @param   int     $offsetX = 0
+     * @param   int     $offsetY = 0
      * @return  self
      */
-    public function labelX(string $label)
-    {
+    public function labelX(
+        string $label,
+        int $offsetX = 0,
+        int $offsetY = 0,
+    ) {
         $this->labelX = $label;
+        $this->labelXOffsetX = $offsetX;
+        $this->labelXOffsetY = $offsetY;
         return $this;
     }
 
     /**
      * sets label of Y
      * @param   string  $label
+     * @param   int     $offsetX = 0
+     * @param   int     $offsetY = 0
      * @return  self
      */
-    public function labelY(string $label)
-    {
+    public function labelY(
+        string $label,
+        int $offsetX = 0,
+        int $offsetY = 0,
+    ) {
         $this->labelY = $label;
+        $this->labelYOffsetX = $offsetX;
+        $this->labelYOffsetY = $offsetY;
         return $this;
     }
 
     /**
      * sets caption
      * @param   string  $caption
+     * @param   int     $offsetX = 0
+     * @param   int     $offsetY = 0
      * @return  self
      */
-    public function caption(string $caption)
-    {
+    public function caption(
+        string $caption,
+        int $offsetX = 0,
+        int $offsetY = 0,
+    ) {
         $this->caption = $caption;
+        $this->captionOffsetX = $offsetX;
+        $this->captionOffsetY = $offsetY;
         return $this;
     }
 }

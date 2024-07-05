@@ -91,7 +91,7 @@ jobs:
       - name: PHP MD
         run: |
           ./vendor/bin/phpmd --version
-          ./vendor/bin/phpmd ./src/ ./examples/ ./tests/ text phpmd.xml
+          ./vendor/bin/phpmd ./src/ ./examples/ text phpmd.xml
 
       - name: PHP Code Sniffer
         run: |

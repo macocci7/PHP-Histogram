@@ -68,7 +68,7 @@ composer require macocci7/php-histogram
 
 - Result:
 
-    ![examples/img/HistogramBasicUsage.png](examples/img/HistogramBasicUsage.png)
+    <img src="examples/img/HistogramBasicUsage.png" width="300" />
 
 - Details:
     - Import autoloader: `require_once __DIR__ . '/../vendor/autoload.php'`
@@ -106,6 +106,13 @@ You can change properties of Histogram like as follows.
         // Canvas Size: ($width, $height) / Deafult: (400, 300)
         // 50 <= $width / 50 <= $height
         ->resize(600, 400)
+
+        ->plotarea( // this takes precedence over 'frame()'
+            offset: [120, 80],   // [x, y] in pix, default=[]
+            width: 360, // width in pix, default=0
+            height: 240, // height in pix, default=0
+            backgroundColor: null, // null as transparent, default=null
+        )
 
         // Ratio of the size of the plot area to the Canvas Size
         // frame($width, $height) / Default: (0.8, 0.7)
@@ -172,7 +179,7 @@ You can change properties of Histogram like as follows.
 
 - Result: [examples/img/ChangePropsByMethods.png](examples/img/ChangePropsByMethods.png)
 
-    ![examples/img/ChangePropsByMethods.png](examples/img/ChangePropsByMethods.png)
+    <img src="examples/img/ChangePropsByMethods.png" width="400" />
 
 ### 5.3. Changing Properties By Neon File
 
@@ -186,6 +193,8 @@ First, create a Neon file.
     canvasWidth: 600
     canvasHeight: 400
     canvasBackgroundColor: '#223399'
+    plotarea:
+        backgroundColor:    # `null` as transparent
     frameXRatio: 0.7
     frameYRatio: 0.6
     axisColor: '#999'
@@ -208,8 +217,14 @@ First, create a Neon file.
     showCumulativeRelativeFrequencyPolygon: true
     showFrequency: true
     labelX: 'Class (Items)'
+    labelXOffsetX: 0
+    labelXOffsetY: 0
     labelY: 'Frequency (People)'
+    labelYOffsetX: 0
+    labelYOffsetY: 0
     caption: 'Items Purchased / month（Feb 2024）'
+    captionOffsetX: 0
+    captionOffsetY: 0
     ```
 
 Second, Code PHP as follows.
@@ -234,7 +249,7 @@ Then, run the PHP code and view the result.
 
 - Result: [examples/img/ChangePropsByNeon.png](examples/img/ChangePropsByNeon.png)
 
-    ![examples/img/ChangePropsByNeon.png](examples/img/ChangePropsByNeon.png)
+    <img src="examples/img/ChangePropsByNeon.png" width="400" />
 
 ### 5.4. Changing Properties By Array
 
@@ -253,8 +268,14 @@ You can change properties of Histogram like as follows.
         'canvasWidth' => 600,
         'canvasHeight' => 400,
         'canvasBackgroundColor' => '#224499',
-        'frameXRatio' => 0.7,
-        'frameYRatio' => 0.6,
+        'plotarea' => [
+            'offset' => [90, 80],
+            'width' => 420, // 'width' takes precedence over 'frameXRatio'
+            'height' => 240, // 'height' takes precedence over 'frameYRatio'
+            'backgroundColor' => null,
+        ],
+        'frameXRatio' => 0.8,
+        'frameYRatio' => 0.7,
         'axisColor' => '#999',
         'axisWidth' => 3,
         'gridColor' => '#eee',
@@ -275,8 +296,14 @@ You can change properties of Histogram like as follows.
         'showCumulativeRelativeFrequencyPolygon' => true,
         'showFrequency' => true,
         'labelX' => 'Class (Items)',
+        'labelXOffsetX' => 0,
+        'labelXOffsetY' => 0,
         'labelY' => 'Frequency (People)',
+        'labelYOffsetX' => 0,
+        'labelYOffsetY' => 0,
         'caption' => 'Items Purchased / month（Feb 2024）',
+        'captionOffsetX' => 0,
+        'captionOffsetY' => 0,
     ];
 
     $hg = new Histogram();
@@ -288,7 +315,7 @@ You can change properties of Histogram like as follows.
 
 - Result: [examples/img/ChangePropsByArray.png](examples/img/ChangePropsByArray.png)
 
-    ![examples/img/ChangePropsByArray.png](examples/img/ChangePropsByArray.png)
+    <img src="examples/img/ChangePropsByArray.png" width="400" />
 
 ### 5.5. Transparent Background
 
@@ -324,7 +351,7 @@ For example,
 
 - Result: [examples/img/TransparentBackground.png](examples/img/TransparentBackground.png)
 
-    <img src="examples/img/TransparentBackground.png" alt="TransparentBackground.png" />
+    <img src="examples/img/TransparentBackground.png" width="400" />
 
     Check if the image has transparent background with HTML:
 
@@ -332,15 +359,25 @@ For example,
 
 ## 6. Examples
 
-- [BasicUsage.php](examples/BasicUsage.php) >> results in: [HistogramBasicUsage.png](examples/img/HistogramBasicUsage.png)
+- [BasicUsage.php](examples/BasicUsage.php) >> results in:
 
-- [ChangePropsByMethods.php](examples/ChangePropsByMethods.php) >> results in: [ChangePropsByMethods.png](examples/img/ChangePropsByMethods.png)
+    <img src="examples/img/HistogramBasicUsage.png" width="300" />
 
-- [ChangePropsByNeon.php](examples/ChangePropsByNeon.php) >> results in: [ChangePropsByNeon.png](examples/img/ChangePropsByNeon.png)
+- [ChangePropsByMethods.php](examples/ChangePropsByMethods.php) >> results in:
 
-- [ChangePropsByArray.php](examples/ChangePropsByArray.php) >> results in: [ChangePropsByArray.png](examples/img/ChangePropsByArray.png)
+    <img src="examples/img/ChangePropsByMethods.png" width="300" />
 
-- [TransparentBackground.php](examples/TransparentBackground.php) >> results in: [TranxparentBackground.png](examples/img/TransparentBackground.png)
+- [ChangePropsByNeon.php](examples/ChangePropsByNeon.php) >> results in:
+
+    <img src="examples/img/ChangePropsByNeon.png" width="300" />
+
+- [ChangePropsByArray.php](examples/ChangePropsByArray.php) >> results in:
+
+    <img src="examples/img/ChangePropsByArray.png" width="300" />
+
+- [TransparentBackground.php](examples/TransparentBackground.php) >> results in:
+
+    <img src="examples/img/TransparentBackground.png" width="300" />
 
 - [HistogramExampleCase.php](examples/HistogramExampleCase.php) >> results in [HistogramExampleCase.md](examples/HistogramExampleCase.md)
 
@@ -356,6 +393,6 @@ For example,
 
 *Document created: 2023/05/28*
 
-*Document updated: 2024/06/26*
+*Document updated: 2024/07/05*
 
 Copyright 2023-2024 macocci7

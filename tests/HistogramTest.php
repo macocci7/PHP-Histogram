@@ -9,19 +9,13 @@ use PHPUnit\Framework\TestCase;
 use Macocci7\PhpHistogram\Histogram;
 use Nette\Neon\Neon;
 
-/**
- * @SuppressWarnings(PHPMD.TooManyMethods)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessivePublicCount)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
- * @SuppressWarnings(PHPMD.CamelCaseMethodName)
- */
 final class HistogramTest extends TestCase
 {
     private $validConfig = [
         'canvasWidth',
         'canvasHeight',
         'canvasBackgroundColor',
+        'plotarea',
         'frameXRatio',
         'frameYRatio',
         'axisColor',
@@ -47,8 +41,14 @@ final class HistogramTest extends TestCase
         'showCumulativeRelativeFrequencyPolygon',
         'showFrequency',
         'labelX',
+        'labelXOffsetX',
+        'labelXOffsetY',
         'labelY',
+        'labelYOffsetX',
+        'labelYOffsetY',
         'caption',
+        'captionOffsetX',
+        'captionOffsetY',
     ];
 
     public static function provide_size_can_return_size_correctly(): array
