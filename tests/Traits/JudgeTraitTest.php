@@ -9,13 +9,8 @@ use PHPUnit\Framework\TestCase;
 use Macocci7\PhpHistogram\Traits\JudgeTrait;
 use Nette\Neon\Neon;
 
-/**
- * @SuppressWarnings(PHPMD.CamelCaseMethodName)
- */
 final class JudgeTraitTest extends TestCase
 {
-    use JudgeTrait;
-
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     // phpcs:disable Generic.Files.LineLength.TooLong
 
@@ -45,7 +40,10 @@ final class JudgeTraitTest extends TestCase
     #[DataProvider('provide_isNumber_can_judge_correctly')]
     public function test_isNumber_can_judge_correctly(mixed $item, bool $expect): void
     {
-        $this->assertSame($expect, $this->isNumber($item));
+        $o = new class {
+            use JudgeTrait;
+        };
+        $this->assertSame($expect, $o->isNumber($item));
     }
 
     public static function provide_isColorCode_can_judge_correctly(): array
@@ -76,6 +74,9 @@ final class JudgeTraitTest extends TestCase
     #[DataProvider('provide_isColorCode_can_judge_correctly')]
     public function test_isColorCode_can_judge_correctly(string $color, bool $expect): void
     {
-        $this->assertSame($expect, $this->isColorCode($color));
+        $o = new class {
+            use JudgeTrait;
+        };
+        $this->assertSame($expect, $o->isColorCode($color));
     }
 }

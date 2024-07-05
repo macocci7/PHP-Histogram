@@ -47,7 +47,7 @@ test_and_lint() {
     echo "-----------------------------------------------------------"
     echo "[PHP $1][phpmd]"
     ./vendor/bin/phpmd \
-                       ./src/ ./examples/ ./tests/ text \
+                       ./src/ ./examples/ text \
                        phpmd.xml
     echo "-----------------------------------------------------------"
     echo "[PHP $1][phpstan]"

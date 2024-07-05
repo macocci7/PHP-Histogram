@@ -9,6 +9,9 @@ use Intervention\Image\Interfaces\ImageInterface;
 use Intervention\Image\Typography\FontFactory;
 use Macocci7\PhpFrequencyTable\FrequencyTable;
 use Macocci7\PhpHistogram\Helpers\Config;
+use Macocci7\PhpPlotter2d\Plotter as Plotter2d;
+use Macocci7\PhpPlotter2d\Canvas;
+use Macocci7\PhpPlotter2d\Transformer;
 
 /**
  * Class for Plotting Histogram
@@ -24,9 +27,12 @@ class Plotter
     use Traits\VisibilityTrait;
 
     public FrequencyTable $ft;
-    protected string $imageDriver;
-    protected ImageManager $imageManager;
-    protected ImageInterface $image;
+    protected Canvas $canvas;
+    protected Transformer $transformer;
+    /**
+     * @var array<string, int[]>    $viewport
+     */
+    protected array $viewport = [];
     protected int|float $gridHeightPitch;
     protected int $barWidth;
     protected int|float $barHeightPitch;
@@ -49,7 +55,6 @@ class Plotter
     public function __construct()
     {
         $this->loadConf();
-        $this->imageManager = ImageManager::{$this->imageDriver}();
         $this->ft = new FrequencyTable();
     }
 
@@ -61,8 +66,8 @@ class Plotter
     {
         Config::load();
         $props = [
-            'imageDriver',
             'canvasBackgroundColor',
+            'plotarea',
             'frameXRatio',
             'frameYRatio',
             'axisColor',
@@ -88,8 +93,14 @@ class Plotter
             'showCumulativeRelativeFrequencyPolygon',
             'showFrequency',
             'labelX',
+            'labelXOffsetX',
+            'labelXOffsetY',
             'labelY',
+            'labelYOffsetX',
+            'labelYOffsetY',
             'caption',
+            'captionOffsetX',
+            'captionOffsetY',
             'validConfig',
         ];
         foreach ($props as $prop) {
@@ -104,47 +115,91 @@ class Plotter
     private function setProperties()
     {
         $this->parsed = $this->ft->parse();
-        $this->baseX = (int) ($this->canvasWidth * (1 - $this->frameXRatio) / 2);
-        $this->baseY = (int) ($this->canvasHeight * (1 + $this->frameYRatio) / 2);
-        $this->barMaxValue = max($this->parsed['Frequencies']) + 1;
-        $this->barMinValue = 0;
-        $this->barWidth = (int) ($this->canvasWidth * $this->frameXRatio / count($this->parsed['Classes']));
-        $this->barHeightPitch = $this->canvasHeight * $this->frameYRatio / $this->barMaxValue;
-        if ($this->gridHeightPitch < 0.2 * $this->barMaxValue) {
-            $this->gridHeightPitch = (int) (0.2 * $this->barMaxValue);
-        }
-        $this->image = $this->imageManager->create($this->canvasWidth, $this->canvasHeight);
-        if ($this->isColorCode($this->canvasBackgroundColor)) {
-            $this->image = $this->image->fill($this->canvasBackgroundColor);
-        }
+        $this->setDefaultPlotarea();
+        $this->setDefaultViewport();
+        $this->adjustGridHeightPitch();
+        $this->createCanvas();
     }
 
     /**
-     * returns position of horizontal axis
-     * @return  int[]
+     * sets default viewport
      */
-    private function getHorizontalAxisPosition()
+    private function setDefaultViewport(): void
     {
-        return [
-            (int) $this->baseX,
-            (int) $this->baseY,
-            (int) $this->canvasWidth * (1 + $this->frameXRatio) / 2,
-            (int) $this->baseY,
+        $classes = $this->parsed['Classes'];
+        if (count($classes) === 1) {
+            $xMin = $classes[0]['bottom'];
+            $xMax = $classes[0]['top'];
+        } else {
+            $xMin = array_shift($classes)['bottom'];
+            $xMax = array_pop($classes)['top'];
+        }
+        $frequencies = $this->parsed['Frequencies'];
+        $yMax = max($frequencies) + 1;
+        $this->viewport = [
+            'x' => [$xMin, $xMax],
+            'y' => [0, $yMax],
         ];
     }
 
     /**
-     * returns position of vertical axis
-     * @return  int[]
+     * sets default plotarea
      */
-    private function getVerticalAxisPosition()
+    private function setDefaultPlotarea(): void
     {
-        return [
-            (int) $this->baseX,
-            (int) $this->canvasHeight * (1 - $this->frameYRatio) / 2,
-            (int) $this->baseX,
-            (int) $this->baseY,
-        ];
+        $plotarea = $this->plotarea;
+        if (!array_key_exists('offset', $plotarea)) {
+            $plotarea['offset'] = [
+                (int) round(
+                    $this->canvasWidth * (1 - $this->frameXRatio) / 2
+                ),
+                (int) round(
+                    $this->canvasHeight * (1 - $this->frameYRatio) / 2
+                ),
+            ];
+        }
+        if (!array_key_exists('width', $plotarea)) {
+            $plotarea['width'] = (int) round(
+                $this->canvasWidth * $this->frameXRatio
+            );
+        }
+        if (!array_key_exists('height', $plotarea)) {
+            $plotarea['height'] = (int) round(
+                $this->canvasHeight * $this->frameYRatio
+            );
+        }
+        $this->plotarea = $plotarea;
+    }
+
+    /**
+     * adjusts gridHeightPitch
+     */
+    private function adjustGridHeightPitch(): void
+    {
+        $yMax = max($this->parsed['Frequencies']) + 1;
+        if ($this->gridHeightPitch < 0.2 * $yMax) {
+            $this->gridHeightPitch = (int) (0.2 * $yMax);
+        }
+    }
+
+    /**
+     * creates canvas
+     */
+    private function createCanvas(): void
+    {
+        $this->canvas = Plotter2d::make(
+            canvasSize: [
+                'width' => $this->canvasWidth,
+                'height' => $this->canvasHeight,
+            ],
+            viewport: $this->viewport,
+            plotarea: $this->plotarea,
+            backgroundColor: $this->canvasBackgroundColor,
+        );
+        $this->transformer = new Transformer(
+            viewport: $this->viewport,
+            plotarea: $this->plotarea,
+        );
     }
 
     /**
@@ -156,24 +211,8 @@ class Plotter
         if (!$this->showAxis) {
             return $this;
         }
-        list($x1, $y1, $x2, $y2) = $this->getHorizontalAxisPosition();
-        $this->image->drawLine(
-            function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
-                $line->from($x1, $y1);
-                $line->to($x2, $y2);
-                $line->color($this->axisColor);
-                $line->width($this->axisWidth);
-            }
-        );
-        list($x1, $y1, $x2, $y2) = $this->getVerticalAxisPosition();
-        $this->image->drawLine(
-            function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
-                $line->from($x1, $y1);
-                $line->to($x2, $y2);
-                $line->color($this->axisColor);
-                $line->width($this->axisWidth);
-            }
-        );
+        $this->canvas->plotAxisX($this->axisWidth, $this->axisColor); // @phpstan-ignore-line
+        $this->canvas->plotAxisY($this->axisWidth, $this->axisColor); // @phpstan-ignore-line
         return $this;
     }
 
@@ -186,32 +225,30 @@ class Plotter
         if (!$this->showGrid) {
             return $this;
         }
-        for ($i = $this->barMinValue; $i <= $this->barMaxValue; $i += $this->gridHeightPitch) {
-            $x1 = $this->baseX;
-            $y1 = $this->baseY - $i * $this->barHeightPitch;
-            $x2 = (int) ($this->canvasWidth * (1 + $this->frameXRatio) / 2);
-            $y2 = $y1;
-            $this->image->drawLine(
-                function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
-                    $line->from($x1, $y1);
-                    $line->to($x2, $y2);
-                    $line->color($this->gridColor);
-                    $line->width($this->gridWidth);
-                }
-            );
-            $x1 = (int) ($this->canvasWidth * (1 + $this->frameXRatio) / 2);
-            $y1 = $this->baseY - $this->barMaxValue * $this->barHeightPitch;
-            $x2 = $x1;
-            $y2 = $this->baseY;
-            $this->image->drawLine(
-                function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
-                    $line->from($x1, $y1);
-                    $line->to($x2, $y2);
-                    $line->color($this->gridColor);
-                    $line->width($this->gridWidth);
-                }
-            );
-        }
+        // Horizontal Grids
+        $this->canvas->plotGridHorizon( // @phpstan-ignore-line
+            interval: $this->gridHeightPitch,
+            width: $this->gridWidth,
+            color: $this->gridColor,
+        );
+        // Vertical Line on the Left Edge
+        $this->canvas->plotLine(    // @phpstan-ignore-line
+            x1: $this->viewport['x'][0],
+            y1: $this->viewport['y'][0],
+            x2: $this->viewport['x'][0],
+            y2: $this->viewport['y'][1],
+            width: $this->gridWidth,
+            color: $this->gridColor,
+        );
+        // Vertical Line on the Right Edge
+        $this->canvas->plotLine(    // @phpstan-ignore-line
+            x1: $this->viewport['x'][1],
+            y1: $this->viewport['y'][0],
+            x2: $this->viewport['x'][1],
+            y2: $this->viewport['y'][1],
+            width: $this->gridWidth + 2,
+            color: $this->gridColor,
+        );
         return $this;
     }
 
@@ -224,39 +261,43 @@ class Plotter
         if (!$this->showGridValues) {
             return $this;
         }
-        for ($i = $this->barMinValue; $i <= $this->barMaxValue; $i += $this->gridHeightPitch) {
-            $x = (int) ($this->baseX - $this->fontSize * 1.1);
-            $y = (int) ($this->baseY - $i * $this->barHeightPitch + $this->fontSize * 0.4);
-            $this->image->text(
-                (string) $i,
-                $x,
-                $y,
-                function (FontFactory $font) {
-                    $font->filename($this->fontPath);
-                    $font->color($this->fontColor);
-                    $font->size($this->fontSize);
-                    $font->align('center');
-                    $font->valign('bottom');
-                }
+        list($offsetX, $offsetY) = $this->canvas->getPlotarea()['offset'];
+        $yMax = (int) $this->viewport['y'][1];
+        for ($i = 0; $i <= $yMax; $i += $this->gridHeightPitch) {
+            $coord = $this->transformer->getCoord(0, $i);
+            $this->canvas->drawText(
+                text: (string) $i,
+                x: $offsetX - 8,
+                y: $offsetY + $coord['y'],
+                fontSize: $this->fontSize,
+                fontPath: $this->fontPath,
+                fontColor: $this->fontColor,
+                align: 'right',
+                valign: 'middle',
             );
         }
         return $this;
     }
 
     /**
-     * returns position of the bar
-     * @param   int $frequency
-     * @param   int $index
-     * @return  int[]
+     * plots a bar
+     *
+     * @param   array<string, int|float>    $class
+     * @param   int                         $frequency
+     * @return  self
      */
-    private function getBarPosition(int $frequency, int $index)
+    private function plotBar(array $class, int $frequency)
     {
-        return [
-            (int) ($this->baseX + $index * $this->barWidth),
-            (int) ($this->baseY - $this->barHeightPitch * $frequency),
-            (int) ($this->baseX + ($index + 1) * $this->barWidth),
-            (int) $this->baseY,
-        ];
+        $this->canvas->plotBox( // @phpstan-ignore-line
+            x1: $class['bottom'],
+            y1: $frequency,
+            x2: $class['top'],
+            y2: 0,
+            backgroundColor: $this->barBackgroundColor,
+            borderWidth: $this->barBorderWidth,
+            borderColor: $this->barBorderColor,
+        );
+        return $this;
     }
 
     /**
@@ -282,16 +323,7 @@ class Plotter
             throw new \Exception("Empty classes or frequencies.");
         }
         foreach ($classes as $index => $class) {
-            list($x1, $y1, $x2, $y2) = $this->getBarPosition($frequencies[$index], $index);
-            $this->image->drawRectangle(
-                $x1,
-                $y1,
-                function (RectangleFactory $rectangle) use ($x1, $y1, $x2, $y2) {
-                    $rectangle->size($x2 - $x1, $y2 - $y1);
-                    $rectangle->background($this->barBackgroundColor);
-                    $rectangle->border($this->barBorderColor, $this->barBorderWidth);
-                }
-            );
+            $this->plotBar($class, $this->parsed['Frequencies'][$index]);
         }
         return $this;
     }
@@ -307,34 +339,29 @@ class Plotter
             throw new \Exception("Classes not found.");
         }
         $classes = $this->parsed['Classes'];
-        $x = $this->baseX;
-        $y = (int) ($this->baseY + $this->fontSize * 1.2);
-        $this->image->text(
-            $classes[0]['bottom'],
-            $x,
-            $y,
-            function (FontFactory $font) {
-                $font->filename($this->fontPath);
-                $font->size($this->fontSize);
-                $font->color($this->fontColor);
-                $font->align('center');
-                $font->valign('bottom');
-            }
+        list($offsetX, $offsetY) = $this->plotarea['offset'];
+        $coord = $this->transformer->getCoord($classes[0]['bottom'], 0);
+        $this->canvas->drawText(
+            text: (string) $classes[0]['bottom'],
+            x: $offsetX,
+            y: $offsetY + $coord['y'] + 4,
+            fontSize: $this->fontSize,
+            fontPath: $this->fontPath,
+            fontColor: $this->fontColor,
+            align: 'center',
+            valign: 'top',
         );
-        foreach ($classes as $index => $class) {
-            $x = $this->baseX + ($index + 1) * $this->barWidth;
-            $y = (int) ($this->baseY + $this->fontSize * 1.2);
-            $this->image->text(
-                $class['top'],
-                $x,
-                $y,
-                function (FontFactory $font) {
-                    $font->filename($this->fontPath);
-                    $font->size($this->fontSize);
-                    $font->color($this->fontColor);
-                    $font->align('center');
-                    $font->valign('bottom');
-                }
+        foreach ($classes as $class) {
+            $coord = $this->transformer->getCoord($class['top'], 0);
+            $this->canvas->drawText(
+                text: (string) $class['top'],
+                x: $offsetX + $coord['x'],
+                y: $offsetY + $coord['y'] + 4,
+                fontSize: $this->fontSize,
+                fontPath: $this->fontPath,
+                fontColor: $this->fontColor,
+                align: 'center',
+                valign: 'top',
             );
         }
         return $this;
@@ -360,19 +387,16 @@ class Plotter
         if (count($frequencies) < 2) {
             throw new \Exception("Too few frequencies.");
         }
+        $classes = $this->parsed['Classes'];
         $count = count($frequencies);
         for ($i = 0; $i < $count - 1; $i++) {
-            $x1 = (int) ($this->baseX + ($i + 0.5) * $this->barWidth);
-            $y1 = $this->baseY - $frequencies[$i] * $this->barHeightPitch;
-            $x2 = (int) ($this->baseX + ($i + 1.5) * $this->barWidth);
-            $y2 = $this->baseY - $frequencies[$i + 1] * $this->barHeightPitch;
-            $this->image->drawLine(
-                function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
-                    $line->from($x1, $y1);
-                    $line->to($x2, $y2);
-                    $line->color($this->frequencyPolygonColor);
-                    $line->width($this->frequencyPolygonWidth);
-                }
+            $this->canvas->plotLine(    // @phpstan-ignore-line
+                x1: ($classes[$i]['bottom'] + $classes[$i]['top']) / 2,
+                y1: $frequencies[$i],
+                x2: ($classes[$i + 1]['bottom'] + $classes[$i + 1]['top']) / 2,
+                y2: $frequencies[$i + 1],
+                width: $this->frequencyPolygonWidth,
+                color: $this->frequencyPolygonColor,
             );
         }
         return $this;
@@ -399,24 +423,19 @@ class Plotter
         if (count($frequencies) < 2) {
             throw new \Exception("Too few frequencies.");
         }
-        $x1 = $this->baseX;
-        $y1 = $this->baseY;
-        $yTop = $this->canvasHeight * (1 - $this->frameYRatio) / 2;
-        $ySpan = $this->baseY - $yTop;
+        $crfs = [-1 => 0];
+        $classes = $this->parsed['Classes'];
+        $yMax = $this->viewport['y'][1];
         foreach ($frequencies as $index => $frequency) {
-            $crf = $this->ft->getCumulativeRelativeFrequency($frequencies, $index);
-            $x2 = $this->baseX + ($index + 1) * $this->barWidth;
-            $y2 = (int) ($this->baseY - $ySpan * $crf);
-            $this->image->drawLine(
-                function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
-                    $line->from($x1, $y1);
-                    $line->to($x2, $y2);
-                    $line->color($this->cumulativeRelativeFrequencyPolygonColor);
-                    $line->width($this->cumulativeRelativeFrequencyPolygonWidth);
-                }
+            $crfs[] = $this->ft->getCumulativeRelativeFrequency($frequencies, $index);
+            $this->canvas->plotLine(    // @phpstan-ignore-line
+                x1: $classes[$index]['bottom'],
+                y1: $yMax * $crfs[$index - 1],
+                x2: $classes[$index]['top'],
+                y2: $yMax * $crfs[$index],
+                width: $this->cumulativeRelativeFrequencyPolygonWidth,
+                color: $this->cumulativeRelativeFrequencyPolygonColor,
             );
-            $x1 = $x2;
-            $y1 = $y2;
         }
         return $this;
     }
@@ -441,20 +460,22 @@ class Plotter
         if (empty($frequencies)) {
             throw new \Exception("Frequencies not found.");
         }
+        $classes = $this->parsed['Classes'];
+        list($offsetX, $offsetY) = $this->plotarea['offset'];
         foreach ($frequencies as $index => $frequency) {
-            $x = (int) ($this->baseX + ($index + 0.5) * $this->barWidth);
-            $y = (int) ($this->baseY - $frequency * $this->barHeightPitch - $this->fontSize * 0.6);
-            $this->image->text(
+            $coord = $this->transformer->getCoord(
+                ($classes[$index]['bottom'] + $classes[$index]['top']) / 2,
                 $frequency,
-                $x,
-                $y,
-                function (FontFactory $font) {
-                    $font->filename($this->fontPath);
-                    $font->size($this->fontSize);
-                    $font->color($this->fontColor);
-                    $font->align('center');
-                    $font->valign('bottom');
-                }
+            );
+            $this->canvas->drawText(
+                text: (string) $frequency,
+                x: $offsetX + $coord['x'],
+                y: $offsetY + $coord['y'] - 6,
+                fontSize: $this->fontSize,
+                fontPath: $this->fontPath,
+                fontColor: $this->fontColor,
+                align: 'center',
+                valign: 'bottom',
             );
         }
         return $this;
@@ -469,19 +490,20 @@ class Plotter
         if (!$this->labelX) {
             return $this;
         }
+        $baseY = $this->plotarea['offset'][1] + $this->plotarea['height'];
         $x = (int) $this->canvasWidth / 2;
-        $y = (int) ($this->baseY + (1 - $this->frameYRatio) * $this->canvasHeight / 3);
-        $this->image->text(
-            (string) $this->labelX,
-            $x,
-            $y,
-            function (FontFactory $font) {
-                $font->filename($this->fontPath);
-                $font->size($this->fontSize);
-                $font->color($this->fontColor);
-                $font->align('center');
-                $font->valign('bottom');
-            }
+        $y = (int) (
+            $baseY + ($this->canvasHeight - $this->plotarea['height']) / 3
+        );
+        $this->canvas->drawText(
+            text: (string) $this->labelX,
+            x: $x + $this->labelXOffsetX,
+            y: $y + $this->labelXOffsetY,
+            fontSize: $this->fontSize,
+            fontPath: $this->fontPath,
+            fontColor: $this->fontColor,
+            align: 'center',
+            valign: 'bottom',
         );
         return $this;
     }
@@ -496,25 +518,26 @@ class Plotter
             return $this;
         }
         $width = $this->canvasHeight;
-        $height = (int) ($this->canvasWidth * (1 - $this->frameXRatio) / 3);
-        // background-color: tranceparent
-        $image = $this->imageManager->create($width, $height);
-        $x = $width / 2;
-        $y = ($height + $this->fontSize) / 2;
-        $image->text(
-            (string) $this->labelY,
-            $x,
-            $y,
-            function (FontFactory $font) {
-                $font->filename($this->fontPath);
-                $font->size($this->fontSize);
-                $font->color($this->fontColor);
-                $font->align('center');
-                $font->valign('bottom');
-            }
+        $height = (int) round(
+            ($this->canvasWidth - $this->plotarea['width']) / 2
         );
-        $image->rotate(90);
-        $this->image->place($image, 'left');
+        $x = (int) round($width / 2);
+        $y = (int) round($height * 2 / 5);
+        $this->canvas->drawText(
+            text: (string) $this->labelY,
+            x: $x,
+            y: $y,
+            fontSize: $this->fontSize,
+            fontPath: $this->fontPath,
+            fontColor: $this->fontColor,
+            align: 'center',
+            valign: 'middle',
+            angle: 90,
+            offsetX: $this->labelYOffsetX,
+            offsetY: $this->labelYOffsetY,
+            rotateAlign: 'left',
+            rotateValign: 'bottom',
+        );
         return $this;
     }
 
@@ -527,19 +550,19 @@ class Plotter
         if (!$this->caption) {
             return $this;
         }
-        $x = (int) ($this->canvasWidth / 2);
-        $y = (int) ($this->canvasHeight * (1 - $this->frameYRatio) / 3);
-        $this->image->text(
+        $x = (int) round($this->canvasWidth / 2);
+        $y = (int) round(
+            ($this->canvasHeight - $this->plotarea['height']) / 3
+        );
+        $this->canvas->drawText(
             (string) $this->caption,
-            $x,
-            $y,
-            function (FontFactory $font) {
-                $font->filename($this->fontPath);
-                $font->size($this->fontSize);
-                $font->color($this->fontColor);
-                $font->align('center');
-                $font->valign('bottom');
-            }
+            $x + $this->captionOffsetX,
+            $y + $this->captionOffsetY,
+            fontSize: $this->fontSize,
+            fontPath: $this->fontPath,
+            fontColor: $this->fontColor,
+            align: 'center',
+            valign: 'bottom',
         );
         return $this;
     }
@@ -567,7 +590,7 @@ class Plotter
         $this->plotLabelX();
         $this->plotLabelY();
         $this->plotCaption();
-        $this->image->save($filePath);
+        $this->canvas->save($filePath);
         return $this;
     }
 }

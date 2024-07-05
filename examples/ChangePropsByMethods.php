@@ -6,14 +6,22 @@ use Macocci7\PhpHistogram\Histogram;
 
 // Initialization
 $hg = new Histogram();
-$hg->setClassRange(5)
+$hg
+   ->setClassRange(5)
    ->setData([1, 5, 6, 10, 12, 14, 15, 16, 17, 18, 20, 24, 25])
 
-// Changing Props By Methods
+   // Changing Props By Methods
 
    // Canvas Size: ($width, $height) / Deafult: (400, 300)
    // 50 <= $width / 50 <= $height
    ->resize(600, 400)
+
+   ->plotarea( // this takes precedence over 'frame()'
+       offset: [120, 80],   // [x, y] in pix, default=[]
+       width: 360, // width in pix, default=0
+       height: 240,   // height in pix, default=0
+       backgroundColor: null,  // null as transparent, default=null
+   )
 
    // Ratio of the size of the plot area to the Canvas Size
    // frame($width, $height) / Default: (0.8, 0.7)
