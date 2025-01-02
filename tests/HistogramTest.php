@@ -51,6 +51,11 @@ final class HistogramTest extends TestCase
         'captionOffsetY',
     ];
 
+    public function test_imagick_extension_loaded(): void
+    {
+        $this->assertTrue(extension_loaded('imagick'));
+    }
+
     public static function provide_size_can_return_size_correctly(): array
     {
         return [

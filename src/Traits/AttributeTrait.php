@@ -88,7 +88,7 @@ trait AttributeTrait
             $this->plotarea['height'] = $height;
         }
         if ($this->isColorCode($backgroundColor) || is_null($backgroundColor)) {
-            $this->plotarea['backgroundColor'] = $backgroundColor;
+            $this->plotarea['backgroundColor'] = $backgroundColor;  // @phpstan-ignore-line
         }
         return $this;
     }

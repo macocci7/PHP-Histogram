@@ -17,7 +17,6 @@ use Macocci7\PhpPlotter2d\Transformer;
  * Class for Plotting Histogram
  * @author  macocci7 <macocci7@yahoo.co.jp>
  * @license MIT
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class Plotter
 {
@@ -232,7 +231,7 @@ class Plotter
             color: $this->gridColor,
         );
         // Vertical Line on the Left Edge
-        $this->canvas->plotLine(    // @phpstan-ignore-line
+        $this->canvas->plotLine(
             x1: $this->viewport['x'][0],
             y1: $this->viewport['y'][0],
             x2: $this->viewport['x'][0],
@@ -241,7 +240,7 @@ class Plotter
             color: $this->gridColor,
         );
         // Vertical Line on the Right Edge
-        $this->canvas->plotLine(    // @phpstan-ignore-line
+        $this->canvas->plotLine(
             x1: $this->viewport['x'][1],
             y1: $this->viewport['y'][0],
             x2: $this->viewport['x'][1],
@@ -288,7 +287,7 @@ class Plotter
      */
     private function plotBar(array $class, int $frequency)
     {
-        $this->canvas->plotBox( // @phpstan-ignore-line
+        $this->canvas->plotBox(
             x1: $class['bottom'],
             y1: $frequency,
             x2: $class['top'],
@@ -304,7 +303,6 @@ class Plotter
      * plots bars
      * @return  self
      * @thrown  \Exception
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     private function plotBars()
     {
@@ -390,7 +388,7 @@ class Plotter
         $classes = $this->parsed['Classes'];
         $count = count($frequencies);
         for ($i = 0; $i < $count - 1; $i++) {
-            $this->canvas->plotLine(    // @phpstan-ignore-line
+            $this->canvas->plotLine(
                 x1: ($classes[$i]['bottom'] + $classes[$i]['top']) / 2,
                 y1: $frequencies[$i],
                 x2: ($classes[$i + 1]['bottom'] + $classes[$i + 1]['top']) / 2,
@@ -406,7 +404,6 @@ class Plotter
      * plots cumulative relative frequency polygon
      * @return  self
      * @thrown  \Exception
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     private function plotCumulativeRelativeFrequencyPolygon()
     {
@@ -428,7 +425,7 @@ class Plotter
         $yMax = $this->viewport['y'][1];
         foreach ($frequencies as $index => $frequency) {
             $crfs[] = $this->ft->getCumulativeRelativeFrequency($frequencies, $index);
-            $this->canvas->plotLine(    // @phpstan-ignore-line
+            $this->canvas->plotLine(
                 x1: $classes[$index]['bottom'],
                 y1: $yMax * $crfs[$index - 1],
                 x2: $classes[$index]['top'],
@@ -490,7 +487,7 @@ class Plotter
         if (!$this->labelX) {
             return $this;
         }
-        $baseY = $this->plotarea['offset'][1] + $this->plotarea['height'];
+        $baseY = $this->plotarea['offset'][1] + $this->plotarea['height']; // @phpstan-ignore-line
         $x = (int) $this->canvasWidth / 2;
         $y = (int) (
             $baseY + ($this->canvasHeight - $this->plotarea['height']) / 3

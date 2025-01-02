@@ -38,7 +38,12 @@ Transparent background is also supported.
 ## 3. Requirements
 
 - PHP 8.1 or later
-- Imagick PHP Extention
+- Imagick PHP Extension
+
+    Check with commands:
+    ```bash
+    php -i | grep imagick
+    ```
 - Composer
 
 ## 4. Installation
@@ -393,6 +398,6 @@ For example,
 
 *Document created: 2023/05/28*
 
-*Document updated: 2024/07/05*
+*Document updated: 2025/01/02*
 
-Copyright 2023-2024 macocci7
+Copyright 2023-2025 macocci7
