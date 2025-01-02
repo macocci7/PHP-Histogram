@@ -76,7 +76,7 @@ class CsvUtil
         if (!file_exists($csvFileName)) {
             throw new \Exception("CsvUtil::getDailyData(): '" . $csvFileName . "' does not exist.\n");
         }
-        $csv = array_map('str_getcsv', file($csvFileName));
+        $csv = array_map(fn ($fn) => str_getcsv($fn, ",", "\"", "\\"), file($csvFileName));
         $groupBy = $this->groupBy($csv, "game_date", "release_speed");
         foreach ($groupBy as $index => $row) {
             $groupBy[$index] = $this->convertString2IntegerInArray($row);

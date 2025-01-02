@@ -1,5 +1,6 @@
 composer.lock
 .php-version
+.tool-versions
 /vendor
 /.phpunit.cache
 .phpunit.result.cache
