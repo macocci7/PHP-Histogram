@@ -396,8 +396,4 @@ For example,
 
 ***
 
-*Document created: 2023/05/28*
-
-*Document updated: 2025/01/02*
-
 Copyright 2023-2025 macocci7
