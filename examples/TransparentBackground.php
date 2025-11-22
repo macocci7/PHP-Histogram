@@ -18,4 +18,4 @@ $hg->config([
    ])
    ->setClassRange(5)
    ->setData([ 1, 5, 8, 10, 11, 14, 16, 19, 20, ])
-   ->create('img/TransparentBackground.png');
+   ->create(__DIR__ . '/img/TransparentBackground.png');

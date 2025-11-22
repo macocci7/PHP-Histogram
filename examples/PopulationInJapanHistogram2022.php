@@ -55,7 +55,7 @@ $population = [
 ];
 
 $classRange = 1000000;  // 1 million
-$histogramPath = 'img/HistogramPopulationInJapan2022.png';
+$histogramPath = __DIR__ . '/img/HistogramPopulationInJapan2022.png';
 
 $hg = new Histogram(1024, 768);
 $hg->ft->setColumns2Show([ // Only specified columns will be shown.

@@ -83,4 +83,4 @@ $hg
    ->caption('Items Purchased / month（Feb 2024）')
 
    // Save
-   ->create('img/ChangePropsByMethods.png');
+   ->create(__DIR__ . '/img/ChangePropsByMethods.png');

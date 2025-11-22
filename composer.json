@@ -1,6 +1,6 @@
 {
     "name": "macocci7/php-histogram",
-    "description": "it's easy to use for creating histograms.",
+    "description": "PHP-Histogram creates histograms using FrequencyTable.",
     "type": "library",
     "license": "MIT",
     "autoload": {
@@ -20,7 +20,7 @@
         "macocci7/php-frequency-table": "^1.4",
         "nette/neon": "^3.4",
         "fakerphp/faker": "^1.24",
-        "macocci7/php-plotter2d": "^0.3"
+        "macocci7/php-plotter2d": "^0.4"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^4.0",

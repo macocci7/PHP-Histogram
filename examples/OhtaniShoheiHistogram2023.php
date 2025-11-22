@@ -14,7 +14,7 @@ $hg->setClassRange(5)
    ->fontSize(14)
    ->frequencyOn();
 
-$dailyData = $csvUtil->getDailyData('csv/660271_data.csv');
+$dailyData = $csvUtil->getDailyData(__DIR__ . '/csv/660271_data.csv');
 
 echo "# Pitching speed (MPH)\n\n";
 echo "## Pitcher:\n\n";
@@ -26,7 +26,7 @@ foreach (array_keys($dailyData) as $key) {
 }
 foreach ($dailyData as $key => $data) {
     echo "\n## " . $key . "\n\n";
-    $histogramPath = 'img/HistogramOhtaniShohei' . $key . '.png';
+    $histogramPath = __DIR__ . '/img/HistogramOhtaniShohei' . $key . '.png';
     $hg->setData($data)
        ->create($histogramPath);
     echo "<details><summary>Properties</summary>\n\n";
