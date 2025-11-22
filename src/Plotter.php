@@ -81,7 +81,6 @@ class Plotter
             'frequencyPolygonWidth',
             'cumulativeRelativeFrequencyPolygonColor',
             'cumulativeRelativeFrequencyPolygonWidth',
-            'fontPath',
             'fontSize',
             'fontColor',
             'showBar',

@@ -476,8 +476,8 @@ final class HistogramTest extends TestCase
     public static function provide_fontPath_can_set_font_path_correctly(): array
     {
         return [
-            ['path' => 'examples/fonts/ipaexg.ttf', 'expect' => 'examples/fonts/ipaexg.ttf', ],
-            ['path' => 'examples/fonts/ipaexm.ttf', 'expect' => 'examples/fonts/ipaexm.ttf', ],
+            ['path' => __DIR__ . '/../src/Fonts/ipaexg.ttf', 'expect' => __DIR__ . '/../src/Fonts/ipaexg.ttf', ],
+            ['path' => __DIR__ . '/../src/Fonts/ipaexm.ttf', 'expect' => __DIR__ . '/../src/Fonts/ipaexm.ttf', ],
         ];
     }
 

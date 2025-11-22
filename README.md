@@ -68,7 +68,7 @@ composer require macocci7/php-histogram
     $hg = new Histogram();
     $hg->setClassRange(5)
     ->setData([ 0, 5, 8, 10, 12, 13, 15, 16, 17, 18, 19, 20, 24, ])
-    ->create('img/HistogramBasicUsage.png');
+    ->create(__DIR__ . '/img/HistogramBasicUsage.png');
     ```
 
 - Result:
@@ -179,7 +179,7 @@ You can change properties of Histogram like as follows.
         ->caption('Items Purchased / month（Feb 2024）')
 
         // Save
-        ->create('img/ChangePropsByMethods.png');
+        ->create(__DIR__ . '/img/ChangePropsByMethods.png');
     ```
 
 - Result: [examples/img/ChangePropsByMethods.png](examples/img/ChangePropsByMethods.png)
@@ -246,8 +246,8 @@ Second, Code PHP as follows.
     $hg = new Histogram();
     $hg->setClassRange(5)
        ->setData([1, 5, 6, 10, 12, 14, 15, 16, 17, 18, 20, 24, 25])
-       ->config('ChangePropsByNeon.neon')
-       ->create('img/ChangePropsByNeon.png');
+       ->config(__DIR__ . '/ChangePropsByNeon.neon')
+       ->create(__DIR__ . '/img/ChangePropsByNeon.png');
     ```
 
 Then, run the PHP code and view the result.
@@ -315,7 +315,7 @@ You can change properties of Histogram like as follows.
     $hg->setClassRange(5)
        ->setData([1, 5, 6, 10, 12, 14, 15, 16, 17, 18, 20, 24, 25])
        ->config($props)
-       ->create('img/ChangePropsByArray.png');
+       ->create(__DIR__ . '/img/ChangePropsByArray.png');
     ```
 
 - Result: [examples/img/ChangePropsByArray.png](examples/img/ChangePropsByArray.png)
@@ -351,7 +351,7 @@ For example,
        ])
        ->setClassRange(5)
        ->setData([ 1, 5, 8, 10, 11, 14, 16, 19, 20, ])
-       ->create('img/TransparentBackground.png');
+       ->create(__DIR__ . '/img/TransparentBackground.png');
     ```
 
 - Result: [examples/img/TransparentBackground.png](examples/img/TransparentBackground.png)

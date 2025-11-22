@@ -17,7 +17,7 @@ $hg->ft->setData(
 // frequency:off
 $hg
    ->caption('CASE01')
-   ->create('img/HistogramExample01.png');
+   ->create(__DIR__ . '/img/HistogramExample01.png');
 
 // CASE:02
 // bar:on
@@ -30,7 +30,7 @@ $hg
    ->crfpOff()
    ->frequencyOff()
    ->caption('CASE02')
-   ->create('img/HistogramExample02.png');
+   ->create(__DIR__ . '/img/HistogramExample02.png');
 
 // CASE:03
 // bar:on
@@ -43,7 +43,7 @@ $hg
    ->crfpOn()
    ->frequencyOff()
    ->caption('CASE03')
-   ->create('img/HistogramExample03.png');
+   ->create(__DIR__ . '/img/HistogramExample03.png');
 
 // CASE:04
 // bar:on
@@ -56,8 +56,7 @@ $hg
    ->crfpOff()
    ->frequencyOn()
    ->caption('CASE04')
-   ->create('img/HistogramExample04.png');
-
+   ->create(__DIR__ . '/img/HistogramExample04.png');
 // CASE:05
 // bar:on
 // frequencyPolygon:off
@@ -69,7 +68,7 @@ $hg
    ->crfpOn()
    ->frequencyOn()
    ->caption('CASE05')
-   ->create('img/HistogramExample05.png');
+   ->create(__DIR__ . '/img/HistogramExample05.png');
 
 // CASE:06
 // bar:on
@@ -82,7 +81,7 @@ $hg
    ->crfpOn()
    ->frequencyOff()
    ->caption('CASE06')
-   ->create('img/HistogramExample06.png');
+   ->create(__DIR__ . '/img/HistogramExample06.png');
 
 // CASE:07
 // bar:on
@@ -95,7 +94,7 @@ $hg
    ->crfpOff()
    ->frequencyOn()
    ->caption('CASE07')
-   ->create('img/HistogramExample07.png');
+   ->create(__DIR__ . '/img/HistogramExample07.png');
 
 // CASE:08
 // bar:on
@@ -108,7 +107,7 @@ $hg
    ->crfpOn()
    ->frequencyOn()
    ->caption('CASE08')
-   ->create('img/HistogramExample08.png');
+   ->create(__DIR__ . '/img/HistogramExample08.png');
 
 // CASE:09
 // bar:off
@@ -121,7 +120,7 @@ $hg
    ->crfpOff()
    ->frequencyOff()
    ->caption('CASE09')
-   ->create('img/HistogramExample09.png');
+   ->create(__DIR__ . '/img/HistogramExample09.png');
 
 // CASE:10
 // bar:off
@@ -134,9 +133,9 @@ $hg
    ->crfpOff()
    ->frequencyOff()
    ->caption('CASE010')
-   ->create('img/HistogramExample10.png');
+   ->create(__DIR__ . '/img/HistogramExample10.png');
 
-// CASE:11
+   // CASE:11
 // bar:off
 // frequencyPolygon:off
 // cumulativeRelativeFrequencyPolygon:on
@@ -147,7 +146,7 @@ $hg
    ->crfpOn()
    ->frequencyOff()
    ->caption('CASE11')
-   ->create('img/HistogramExample11.png');
+   ->create(__DIR__ . '/img/HistogramExample11.png');
 
 // CASE:12
 // bar:off
@@ -160,7 +159,7 @@ $hg
    ->crfpOff()
    ->frequencyOn()
    ->caption('CASE12')
-   ->create('img/HistogramExample12.png');
+   ->create(__DIR__ . '/img/HistogramExample12.png');
 
 // CASE:13
 // bar:off
@@ -173,7 +172,7 @@ $hg
    ->crfpOn()
    ->frequencyOff()
    ->caption('CASE13')
-   ->create('img/HistogramExample13.png');
+   ->create(__DIR__ . '/img/HistogramExample13.png');
 
 // CASE:14
 // bar:off
@@ -186,4 +185,4 @@ $hg
    ->crfpOn()
    ->frequencyOn()
    ->caption('CASE14')
-   ->create('img/HistogramExample14.png');
+   ->create(__DIR__ . '/img/HistogramExample14.png');

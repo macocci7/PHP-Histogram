@@ -28,7 +28,7 @@ $props = [
     'frequencyPolygonWidth' => 3,
     'cumulativeRelativeFrequencyPolygonColor' => '#ff5577',
     'cumulativeRelativeFrequencyPolygonWidth' => 7,
-    'fontPath' => 'fonts/ipaexg.ttf',
+    'fontPath' => __DIR__ . '/fonts/ipaexg.ttf',
     'fontSize' => 24,
     'fontColor' => '#eeeeee',
     'showBar' => true,
@@ -50,4 +50,4 @@ $hg = new Histogram();
 $hg->setClassRange(5)
    ->setData([1, 5, 6, 10, 12, 14, 15, 16, 17, 18, 20, 24, 25])
    ->config($props)
-   ->create('img/ChangePropsByArray.png');
+   ->create(__DIR__ . '/img/ChangePropsByArray.png');

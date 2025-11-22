@@ -16,7 +16,7 @@ trait StyleTrait
     protected int $frequencyPolygonWidth;
     protected string|null $cumulativeRelativeFrequencyPolygonColor;
     protected int $cumulativeRelativeFrequencyPolygonWidth;
-    protected string $fontPath;
+    protected string $fontPath = __DIR__ . '/../Fonts/ipaexg.ttf';
     protected int $fontSize;
     protected string|null $fontColor;
 
