@@ -2,11 +2,6 @@
 
 namespace Macocci7\PhpHistogram;
 
-use Intervention\Image\Geometry\Factories\LineFactory;
-use Intervention\Image\Geometry\Factories\RectangleFactory;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Interfaces\ImageInterface;
-use Intervention\Image\Typography\FontFactory;
 use Macocci7\PhpFrequencyTable\FrequencyTable;
 use Macocci7\PhpHistogram\Helpers\Config;
 use Macocci7\PhpPlotter2d\Plotter as Plotter2d;
@@ -59,9 +54,8 @@ class Plotter
 
     /**
      * loads config.
-     * @return  void
      */
-    private function loadConf()
+    private function loadConf(): void
     {
         Config::load();
         $props = [
@@ -108,9 +102,8 @@ class Plotter
 
     /**
      * sets properties
-     * @return  void
      */
-    private function setProperties()
+    private function setProperties(): void
     {
         $this->parsed = $this->ft->parse();
         $this->setDefaultPlotarea();
@@ -202,9 +195,8 @@ class Plotter
 
     /**
      * plots axis
-     * @return  self
      */
-    private function plotAxis()
+    private function plotAxis(): self
     {
         if (!$this->showAxis) {
             return $this;
@@ -216,9 +208,8 @@ class Plotter
 
     /**
      * plots grids
-     * @return  self
      */
-    private function plotGrids()
+    private function plotGrids(): self
     {
         if (!$this->showGrid) {
             return $this;
@@ -252,9 +243,8 @@ class Plotter
 
     /**
      * plots grid values
-     * @return  self
      */
-    private function plotGridValues()
+    private function plotGridValues(): self
     {
         if (!$this->showGridValues) {
             return $this;
@@ -282,9 +272,8 @@ class Plotter
      *
      * @param   array<string, int|float>    $class
      * @param   int                         $frequency
-     * @return  self
      */
-    private function plotBar(array $class, int $frequency)
+    private function plotBar(array $class, int $frequency): self
     {
         $this->canvas->plotBox(
             x1: $class['bottom'],
@@ -300,10 +289,9 @@ class Plotter
 
     /**
      * plots bars
-     * @return  self
      * @thrown  \Exception
      */
-    private function plotBars()
+    private function plotBars(): self
     {
         if (!$this->showBar) {
             return $this;
@@ -327,10 +315,9 @@ class Plotter
 
     /**
      * plots classes
-     * @return  self
      * @thrown  \Exception
      */
-    private function plotClasses()
+    private function plotClasses(): self
     {
         if (!array_key_exists('Classes', $this->parsed)) {
             throw new \Exception("Classes not found.");
@@ -366,10 +353,9 @@ class Plotter
 
     /**
      * plots frequency polygon
-     * @return  self
      * @thrown  \Exception
      */
-    private function plotFrequencyPolygon()
+    private function plotFrequencyPolygon(): self
     {
         if (!$this->showFrequencyPolygon) {
             return $this;
@@ -401,10 +387,9 @@ class Plotter
 
     /**
      * plots cumulative relative frequency polygon
-     * @return  self
      * @thrown  \Exception
      */
-    private function plotCumulativeRelativeFrequencyPolygon()
+    private function plotCumulativeRelativeFrequencyPolygon(): self
     {
         if (!$this->showCumulativeRelativeFrequencyPolygon) {
             return $this;
@@ -438,10 +423,9 @@ class Plotter
 
     /**
      * plots frequencies
-     * @return  self
      * @thrown  \Exception
      */
-    private function plotFrequencies()
+    private function plotFrequencies(): self
     {
         if (!$this->showFrequency) {
             return $this;
@@ -479,9 +463,8 @@ class Plotter
 
     /**
      * plots label of X
-     * @return  self
      */
-    private function plotLabelX()
+    private function plotLabelX(): self
     {
         if (!$this->labelX) {
             return $this;
@@ -506,9 +489,8 @@ class Plotter
 
     /**
      * plots label of Y
-     * @return  self
      */
-    private function plotLabelY()
+    private function plotLabelY(): self
     {
         if (!$this->labelY) {
             return $this;
@@ -539,9 +521,8 @@ class Plotter
 
     /**
      * plots caption
-     * @return  self
      */
-    private function plotCaption()
+    private function plotCaption(): self
     {
         if (!$this->caption) {
             return $this;
@@ -551,9 +532,9 @@ class Plotter
             ($this->canvasHeight - $this->plotarea['height']) / 3
         );
         $this->canvas->drawText(
-            (string) $this->caption,
-            $x + $this->captionOffsetX,
-            $y + $this->captionOffsetY,
+            text: (string) $this->caption,
+            x: $x + $this->captionOffsetX,
+            y: $y + $this->captionOffsetY,
             fontSize: $this->fontSize,
             fontPath: $this->fontPath,
             fontColor: $this->fontColor,
@@ -565,11 +546,9 @@ class Plotter
 
     /**
      * creates a histogram image
-     * @param   string  $filePath
-     * @return  self
      * @thrown  \Exception
      */
-    public function create(string $filePath)
+    public function create(string $filePath): self
     {
         if (strlen($filePath) === 0) {
             throw new \Exception("specify a file path to save image.");

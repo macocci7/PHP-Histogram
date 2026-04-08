@@ -74,13 +74,13 @@ $hg
    ->frequencyOn()
 
    // X Label
-   ->labelX('Class (Items)')
+   ->labelX('Items Purchased')
 
    // Y Label
-   ->labelY('Frequency (People)')
+   ->labelY('Number of Customers')
 
    // Caption
-   ->caption('Items Purchased / month（Feb 2024）')
+   ->caption('Items Purchased / month (Mar 2026)')
 
    // Save
    ->create(__DIR__ . '/img/ChangePropsByMethods.png');

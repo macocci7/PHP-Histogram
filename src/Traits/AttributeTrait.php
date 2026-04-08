@@ -29,7 +29,7 @@ trait AttributeTrait
      * returns current canvas size
      * @return  array<string, int>  [width(px), height(px)]
      */
-    public function size()
+    public function size(): array
     {
         return [
             'width' => $this->canvasWidth,
@@ -39,12 +39,9 @@ trait AttributeTrait
 
     /**
      * resizes the canvas size
-     * @param   int $width  specify in pix at least 50
-     * @param   int $height specify in pix at least 50
-     * @return  self
      * @thrown  \Exception
      */
-    public function resize(int $width, int $height)
+    public function resize(int $width, int $height): self
     {
         if ($width < $this->CANVAS_WIDTH_LIMIT_LOWER) {
             throw new \Exception(
@@ -67,17 +64,13 @@ trait AttributeTrait
      * sets plotarea
      *
      * @param   int[]       $offset = []
-     * @param   int         $width = 0
-     * @param   int         $height = 0
-     * @param   string|null $backgroundColor = null
-     * @return  self
      */
     public function plotarea(
         array $offset = [],
         int $width = 0,
         int $height = 0,
         string|null $backgroundColor = null,
-    ) {
+    ): self {
         if ($offset !== []) {
             $this->plotarea['offset'] = $offset;
         }
@@ -95,12 +88,9 @@ trait AttributeTrait
 
     /**
      * sets the frame ratio of the histogram area to the canvas size
-     * @param   float   $xRatio (0.0 < $xRatio < 1.0)
-     * @param   float   $yRatio (0.0 < $yRatio < 1.0)
-     * @return  self
      * @thrown  \Exception
      */
-    public function frame(float $xRatio, float $yRatio)
+    public function frame(float $xRatio, float $yRatio): self
     {
         if ($xRatio <= 0.0 || $xRatio > 1.0) {
             throw new \Exception("Ratio must be: 0.0 < ratio <= 1.0.");
@@ -115,16 +105,12 @@ trait AttributeTrait
 
     /**
      * sets label of X
-     * @param   string  $label
-     * @param   int     $offsetX = 0
-     * @param   int     $offsetY = 0
-     * @return  self
      */
     public function labelX(
         string $label,
         int $offsetX = 0,
         int $offsetY = 0,
-    ) {
+    ): self {
         $this->labelX = $label;
         $this->labelXOffsetX = $offsetX;
         $this->labelXOffsetY = $offsetY;
@@ -133,16 +119,12 @@ trait AttributeTrait
 
     /**
      * sets label of Y
-     * @param   string  $label
-     * @param   int     $offsetX = 0
-     * @param   int     $offsetY = 0
-     * @return  self
      */
     public function labelY(
         string $label,
         int $offsetX = 0,
         int $offsetY = 0,
-    ) {
+    ): self {
         $this->labelY = $label;
         $this->labelYOffsetX = $offsetX;
         $this->labelYOffsetY = $offsetY;
@@ -151,16 +133,12 @@ trait AttributeTrait
 
     /**
      * sets caption
-     * @param   string  $caption
-     * @param   int     $offsetX = 0
-     * @param   int     $offsetY = 0
-     * @return  self
      */
     public function caption(
         string $caption,
         int $offsetX = 0,
         int $offsetY = 0,
-    ) {
+    ): self {
         $this->caption = $caption;
         $this->captionOffsetX = $offsetX;
         $this->captionOffsetY = $offsetY;

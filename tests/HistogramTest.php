@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Macocci7\PhpHistogram;
+namespace Macocci7\PhpHistogram\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;

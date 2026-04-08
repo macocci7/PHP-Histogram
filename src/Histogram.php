@@ -17,8 +17,6 @@ class Histogram extends Plotter
 
     /**
      * constructor
-     * @param   int $width  default: 400(px as canvas width)
-     * @param   int $height default: 300(px as canvas height)
      */
     public function __construct(int $width = 400, int $height = 300)
     {
@@ -29,9 +27,8 @@ class Histogram extends Plotter
 
     /**
      * loads config.
-     * @return  void
      */
-    private function loadConf()
+    private function loadConf(): void
     {
         Config::load();
         $props = [
@@ -46,9 +43,8 @@ class Histogram extends Plotter
     /**
      * set config from specified resource
      * @param   string|mixed[]  $configResource
-     * @return  self
      */
-    public function config(string|array $configResource)
+    public function config(string|array $configResource): self
     {
         if (is_string($configResource)) {
             $conf = $this->configFromFile($configResource);
@@ -63,11 +59,10 @@ class Histogram extends Plotter
 
     /**
      * returns valid config items from specified file
-     * @param   string  $path
      * @return  mixed[]
      * @thrown  \Exception
      */
-    private function configFromFile(string $path)
+    private function configFromFile(string $path): array
     {
         if (strlen($path) === 0) {
             throw new \Exception("Specify valid filename.");
@@ -85,7 +80,7 @@ class Histogram extends Plotter
      * @return  mixed[]
      * @thrown  \Exception
      */
-    private function configFromArray(array $content)
+    private function configFromArray(array $content): array
     {
         $conf = [];
         foreach ($this->validConfig as $key => $def) {
@@ -105,10 +100,9 @@ class Histogram extends Plotter
      * returns config:
      * - of the specified key
      * - all configs if param is not specified
-     * @param   string|null $key    default: null
      * @return  mixed
      */
-    public function getConfig(string|null $key = null)
+    public function getConfig(string|null $key = null): mixed
     {
         if (is_null($key)) {
             $config = [];
@@ -125,11 +119,9 @@ class Histogram extends Plotter
 
     /**
      * sets class range
-     * @param   int|float   $classRange
-     * @return  self
      * @thrown  \Exception
      */
-    public function setClassRange(int|float $classRange)
+    public function setClassRange(int|float $classRange): self
     {
         if ($classRange <= 0) {
             throw new \Exception("Class range must be a positive number.");
@@ -141,10 +133,9 @@ class Histogram extends Plotter
     /**
      * sets data
      * @param   array<int|string, int|float>    $data
-     * @return  self
      * @thrown  \Exception
      */
-    public function setData(array $data)
+    public function setData(array $data): self
     {
         if (!$this->ft->isSettableData($data)) {
             throw new \Exception("Invalid data. Expected: array<int|string, int|float>");

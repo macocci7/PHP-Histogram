@@ -6,7 +6,7 @@
 
 You can create a simple Histogram just by setting `class range` and `data` and `filepath` to save.
 
-<img src="examples/img/HistogramBasicUsage.png" width="300" />
+<img src="examples/img/BasicUsage.png" width="300" />
 
 `Frequency Polygon`, `Cumulative Frequency Polygon`, `Cumulative Relative Frequency Polygon` and plotting `Frequency` are supported.
 
@@ -37,14 +37,20 @@ Transparent background is also supported.
 
 ## 3. Requirements
 
-- PHP 8.1 or later
+- PHP 8.3 or later
 - Imagick PHP Extension
 
     Check with commands:
     ```bash
-    php -i | grep imagick
+    (php -m; php -i) | grep imagick
     ```
-- Composer
+- Mbstring PHP Extension
+
+    Check with commands:
+    ```bash
+    (php -m; php -i) | grep mbstring
+    ```
+- [Composer](https://getcomposer.org/)
 
 ## 4. Installation
 
@@ -68,12 +74,12 @@ composer require macocci7/php-histogram
     $hg = new Histogram();
     $hg->setClassRange(5)
     ->setData([ 0, 5, 8, 10, 12, 13, 15, 16, 17, 18, 19, 20, 24, ])
-    ->create(__DIR__ . '/img/HistogramBasicUsage.png');
+    ->create(__DIR__ . '/img/BasicUsage.png');
     ```
 
 - Result:
 
-    <img src="examples/img/HistogramBasicUsage.png" width="300" />
+    <img src="examples/img/BasicUsage.png" width="300" />
 
 - Details:
     - Import autoloader: `require_once __DIR__ . '/../vendor/autoload.php'`
@@ -170,13 +176,13 @@ You can change properties of Histogram like as follows.
         ->frequencyOn()
 
         // X Label
-        ->labelX('Class (Items)')
+        ->labelX('Items purchased')
 
         // Y Label
-        ->labelY('Frequency (People)')
+        ->labelY('Number of Customers')
 
         // Caption
-        ->caption('Items Purchased / month（Feb 2024）')
+        ->caption('Items Purchased / month (Mar 2026)')
 
         // Save
         ->create(__DIR__ . '/img/ChangePropsByMethods.png');
@@ -214,20 +220,20 @@ First, create a Neon file.
     frequencyPolygonWidth: 3
     cumulativeRelativeFrequencyPolygonColor: '#ff00ff'
     cumulativeRelativeFrequencyPolygonWidth: 7
-    fontPath: 'fonts/ipaexm.ttf'
+    fontPath: '/usr/share/fonts/opentype/ipafont-mincho/ipamp.ttf'
     fontSize: 24
     fontColor: '#eeeeee'
     showBar: true
     showFrequencyPolygon: true
     showCumulativeRelativeFrequencyPolygon: true
     showFrequency: true
-    labelX: 'Class (Items)'
+    labelX: 'Items purchased'
     labelXOffsetX: 0
     labelXOffsetY: 0
-    labelY: 'Frequency (People)'
+    labelY: 'Number of Customers'
     labelYOffsetX: 0
     labelYOffsetY: 0
-    caption: 'Items Purchased / month（Feb 2024）'
+    caption: 'Items Purchased / month (Mar 2026)'
     captionOffsetX: 0
     captionOffsetY: 0
     ```
@@ -293,20 +299,20 @@ You can change properties of Histogram like as follows.
         'frequencyPolygonWidth' => 3,
         'cumulativeRelativeFrequencyPolygonColor' => '#ff5577',
         'cumulativeRelativeFrequencyPolygonWidth' => 7,
-        'fontPath' => 'fonts/ipaexg.ttf',
+        'fontPath' => '/usr/share/fonts/opentype/ipafont-gothic/ipagp.ttf',
         'fontSize' => 24,
         'fontColor' => '#eeeeee',
         'showBar' => true,
         'showFrequencyPolygon' => true,
         'showCumulativeRelativeFrequencyPolygon' => true,
         'showFrequency' => true,
-        'labelX' => 'Class (Items)',
+        'labelX' => 'Items Purchased',
         'labelXOffsetX' => 0,
         'labelXOffsetY' => 0,
-        'labelY' => 'Frequency (People)',
+        'labelY' => 'Number of Customers',
         'labelYOffsetX' => 0,
         'labelYOffsetY' => 0,
-        'caption' => 'Items Purchased / month（Feb 2024）',
+        'caption' => 'Items Purchased / month (Mar 2026)',
         'captionOffsetX' => 0,
         'captionOffsetY' => 0,
     ];
@@ -366,7 +372,7 @@ For example,
 
 - [BasicUsage.php](examples/BasicUsage.php) >> results in:
 
-    <img src="examples/img/HistogramBasicUsage.png" width="300" />
+    <img src="examples/img/BasicUsage.png" width="300" />
 
 - [ChangePropsByMethods.php](examples/ChangePropsByMethods.php) >> results in:
 
@@ -386,14 +392,8 @@ For example,
 
 - [HistogramExampleCase.php](examples/HistogramExampleCase.php) >> results in [HistogramExampleCase.md](examples/HistogramExampleCase.md)
 
-- [OhtaniShoheiHistogram2023.php](examples/OhtaniShoheiHistogram2023.php) >> results in [OhtaniShoheiHistogram2023.md](examples/OhtaniShoheiHistogram2023.md)
-
-- [PopulationInJapanHistogram2022.php](examples/PopulationInJapanHistogram2022.php) >> results in [PopulationInJapanHistogram2022.md](examples/PopulationInJapanHistogram2022.md)
+- [OhtaniShoheiHistogram2025-2026.php](examples/OhtaniShoheiHistogram2025-2026.php) >> results in [OhtaniShoheiHistogram2025-2026.md](examples/OhtaniShoheiHistogram2025-2026.md)
 
 ## 7. License
 
 [MIT](LICENSE)
-
-***
-
-Copyright 2023-2025 macocci7
