@@ -22,11 +22,9 @@ trait StyleTrait
 
     /**
      * sets the background color of the canvas
-     * @param   string  $color  in '#rrggbb' format
-     * @return  self
      * @thrown  \Exception
      */
-    public function bgcolor(string $color)
+    public function bgcolor(string $color): self
     {
         if (!$this->isColorCode($color)) {
             throw new \Exception("specify the color code in '#rrggbb' format.");
@@ -37,12 +35,9 @@ trait StyleTrait
 
     /**
      * sets attributes of axis.
-     * @param   int         $width  in pix
-     * @param   string|null $color  in '#rrggbb' format, null as default
-     * @return  self
      * @thrown  \Exception
      */
-    public function axis(int $width, string|null $color = null)
+    public function axis(int $width, string|null $color = null): self
     {
         if ($width < 1) {
             throw new \Exception("width must be more than zero.");
@@ -59,12 +54,9 @@ trait StyleTrait
 
     /**
      * sets attributes of the grid
-     * @param   int         $width  in pix
-     * @param   string|null $color  in '#rrggbb' format
-     * @return  self
      * @thrown  \Exception
      */
-    public function grid(int $width, string|null $color = null)
+    public function grid(int $width, string|null $color = null): self
     {
         if ($width < 1) {
             throw new \Exception("width must be more than zero.");
@@ -81,11 +73,9 @@ trait StyleTrait
 
     /**
      * sets the background color of histogram-bars
-     * @param   string  $color in '#rrggbb' format
-     * @return  self
      * @thrown  \Exception
      */
-    public function color(string $color)
+    public function color(string $color): self
     {
         if (!$this->isColorCode($color)) {
             throw new \Exception("specify color code in '#rrggbb' format.");
@@ -96,12 +86,9 @@ trait StyleTrait
 
     /**
      * sets attributes of the border of histogram-bar
-     * @param   int         $width  in pix
-     * @param   string|null $color  in '#rrggbb' format
-     * @return  self
      * @thrown  \Exception
      */
-    public function border(int $width, string|null $color = null)
+    public function border(int $width, string|null $color = null): self
     {
         if ($width < 1) {
             throw new \Exception("width must be more than zero.");
@@ -118,12 +105,9 @@ trait StyleTrait
 
     /**
      * sets attributes of the frequency polygon
-     * @param   int         $width  in pix
-     * @param   string|null $color  in '#rrggbb' format
-     * @return  self
      * @thrown  \Exception
      */
-    public function fp(int $width, string|null $color = null)
+    public function fp(int $width, string|null $color = null): self
     {
         if ($width < 1) {
             throw new \Exception("width must be more than zero.");
@@ -140,12 +124,9 @@ trait StyleTrait
 
     /**
      * sets attributes of cumulative relative frequency polygon
-     * @param   int         $width  in pix
-     * @param   string|null $color  in '#rrggbb' format
-     * @return  self
      * @thrown  \Exception
      */
-    public function crfp(int $width, string|null $color = null)
+    public function crfp(int $width, string|null $color = null): self
     {
         if ($width < 1) {
             throw new \Exception("width must be more than zero.");
@@ -162,11 +143,9 @@ trait StyleTrait
 
     /**
      * sets the font path
-     * @param   string  $path   is the real path to the true type font path
-     * @return  self
      * @thrown  \Exception
      */
-    public function fontPath(string $path)
+    public function fontPath(string $path): self
     {
         if (!file_exists($path)) {
             throw new \Exception("file does not exist.");
@@ -181,11 +160,9 @@ trait StyleTrait
 
     /**
      * sets font size
-     * @param   int $size
-     * @return  self
      * @thrown  \Exception
      */
-    public function fontSize(int $size)
+    public function fontSize(int $size): self
     {
         if ($size < 6) {
             throw new \Exception("size must be more than 5.");
@@ -196,11 +173,9 @@ trait StyleTrait
 
     /**
      * sets font color
-     * @param   string  $color  in '#rrggbb' format
-     * @return  self
      * @thrown  \Exception
      */
-    public function fontColor(string $color)
+    public function fontColor(string $color): self
     {
         if (!$this->isColorCode($color)) {
             throw new \Exception("specify color code in '#rrggbb' format.");

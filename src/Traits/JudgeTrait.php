@@ -6,8 +6,6 @@ trait JudgeTrait
 {
     /**
      * judges if the param is number
-     * @param   mixed   $item
-     * @return  bool
      */
     public static function isNumber(mixed $item): bool
     {
@@ -16,8 +14,6 @@ trait JudgeTrait
 
     /**
      * judges if the param is in '#rrggbb' format or not
-     * @param   mixed  $item
-     * @return  bool
      */
     public static function isColorCode(mixed $item): bool
     {

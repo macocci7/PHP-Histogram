@@ -2,16 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Macocci7\PhpHistogram\Helpers;
+namespace Macocci7\PhpHistogram\Tests\Helpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Macocci7\PhpHistogram\Helpers\Config;
 use Nette\Neon\Neon;
 
-/**
- * @SuppressWarnings(PHPMD.CamelCaseMethodName)
- */
 final class ConfigTest extends TestCase
 {
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps

@@ -17,19 +17,19 @@ frequencyPolygonColor: '#33cc00'
 frequencyPolygonWidth: 3
 cumulativeRelativeFrequencyPolygonColor: '#ff00ff'
 cumulativeRelativeFrequencyPolygonWidth: 7
-fontPath: 'fonts/ipaexm.ttf'
+fontPath: '/usr/share/fonts/opentype/ipafont-mincho/ipamp.ttf'
 fontSize: 24
 fontColor: '#eeeeee'
 showBar: true
 showFrequencyPolygon: true
 showCumulativeRelativeFrequencyPolygon: true
 showFrequency: true
-labelX: 'Class (Items)'
+labelX: 'Items purchased'
 labelXOffsetX: 0
 labelXOffsetY: 0
-labelY: 'Frequency (People)'
+labelY: 'Number of Customers'
 labelYOffsetX: 0
 labelYOffsetY: 0
-caption: 'Items Purchased / month（Feb 2024）'
+caption: 'Items Purchased / month (Mar 2026)'
 captionOffsetX: 0
 captionOffsetY: 0

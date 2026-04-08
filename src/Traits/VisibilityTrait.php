@@ -4,46 +4,18 @@ namespace Macocci7\PhpHistogram\Traits;
 
 trait VisibilityTrait
 {
-    /**
-     * @var bool    $showBar
-     */
     protected bool $showBar;
-
-    /**
-     * @var bool    $showFrequencyPolygon
-     */
     protected bool $showFrequencyPolygon;
-
-    /**
-     * @var bool    $showCumulativeRelativeFrequencyPolygon
-     */
     protected bool $showCumulativeRelativeFrequencyPolygon;
-
-    /**
-     * @var bool    $showFrequency
-     */
     protected bool $showFrequency;
-
-    /**
-     * @var bool    $showGrid
-     */
     protected bool $showGrid;
-
-    /**
-     * @var bool    $showGridValues
-     */
     protected bool $showGridValues;
-
-    /**
-     * @var bool    $showAxis
-     */
     protected bool $showAxis;
 
     /**
      * sets bar-visibility on
-     * @return  self
      */
-    public function barOn()
+    public function barOn(): self
     {
         $this->showBar = true;
         return $this;
@@ -51,9 +23,8 @@ trait VisibilityTrait
 
     /**
      * sets var-visibility off
-     * @return  self
      */
-    public function barOff()
+    public function barOff(): self
     {
         $this->showBar = false;
         return $this;
@@ -61,9 +32,8 @@ trait VisibilityTrait
 
     /**
      * sets frequency-polygon-visibility on
-     * @return  self
      */
-    public function fpOn()
+    public function fpOn(): self
     {
         $this->showFrequencyPolygon = true;
         return $this;
@@ -71,9 +41,8 @@ trait VisibilityTrait
 
     /**
      * sets frequency-polygon-visibility off
-     * @return  self
      */
-    public function fpOff()
+    public function fpOff(): self
     {
         $this->showFrequencyPolygon = false;
         return $this;
@@ -81,9 +50,8 @@ trait VisibilityTrait
 
     /**
      * sets cumulative-relative-frequency-polygon-visibility on
-     * @return  self
      */
-    public function crfpOn()
+    public function crfpOn(): self
     {
         $this->showCumulativeRelativeFrequencyPolygon = true;
         return $this;
@@ -91,9 +59,8 @@ trait VisibilityTrait
 
     /**
      * sets cumulative-relative-frequency-polygon-visibility off
-     * @return  self
      */
-    public function crfpOff()
+    public function crfpOff(): self
     {
         $this->showCumulativeRelativeFrequencyPolygon = false;
         return $this;
@@ -101,9 +68,8 @@ trait VisibilityTrait
 
     /**
      * sets frequency-visibility on
-     * @return  self
      */
-    public function frequencyOn()
+    public function frequencyOn(): self
     {
         $this->showFrequency = true;
         return $this;
@@ -111,9 +77,8 @@ trait VisibilityTrait
 
     /**
      * sets frequency-visibility off
-     * @return  self
      */
-    public function frequencyOff()
+    public function frequencyOff(): self
     {
         $this->showFrequency = false;
         return $this;
